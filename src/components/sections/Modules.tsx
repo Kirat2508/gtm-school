@@ -6,6 +6,7 @@ import { GraphUpIcon } from "@solar-icons/react/bold-duotone/graph-up";
 import { TargetIcon } from "@solar-icons/react/bold-duotone/target";
 import { UsersGroupRoundedIcon } from "@solar-icons/react/bold-duotone/users-group-rounded";
 import { workflowModules, type WorkflowModule } from "@/content/workflow";
+import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
 
 const icons = {
   building: BuildingsIcon,
@@ -56,6 +57,8 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
           src={mod.image}
           alt=""
           fill
+          loading="lazy"
+          quality={70}
           className="origin-bottom-right scale-[1.08] object-contain object-right-bottom opacity-95"
           sizes="(max-width: 768px) 50vw, 24vw"
         />
@@ -67,16 +70,17 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
 export function Modules() {
   return (
     <section id="topics" className="relative overflow-hidden bg-[#FBF6EE]">
-      {/* Bangalore infrastructure — larger, lower-left */}
-      <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-[70%] w-[min(90%,880px)] opacity-[0.68] sm:h-[76%] sm:w-[72%] lg:h-[86%] lg:w-[62%] xl:w-[60%]">
+      <RevealMedia className="pointer-events-none absolute bottom-0 left-0 z-0 h-[70%] w-[min(90%,880px)] opacity-[0.68] sm:h-[76%] sm:w-[72%] lg:h-[86%] lg:w-[62%] xl:w-[60%]">
         <Image
           src="/images/blr-infra.png"
           alt=""
           fill
+          loading="lazy"
+          quality={68}
           className="origin-bottom-left scale-[1.18] object-contain object-left-bottom"
           sizes="(max-width: 1024px) 90vw, 62vw"
         />
-      </div>
+      </RevealMedia>
 
       <svg
         className="pointer-events-none absolute top-16 right-[8%] z-0 hidden h-28 w-48 opacity-25 md:block"
@@ -99,20 +103,22 @@ export function Modules() {
       </svg>
 
       <div className="relative z-10 mx-auto max-w-[920px] px-5 py-14 md:px-10 md:py-16 lg:py-18">
-        <div className="mx-auto max-w-2xl text-center">
+        <FadeIn className="mx-auto max-w-2xl text-center">
           <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
             GTM series
           </p>
           <h2 className="section-headline mt-3 text-[32px] leading-tight text-[#1B2A4A] md:text-[40px] lg:text-[44px]">
             Supercharge your workflow
           </h2>
-        </div>
+        </FadeIn>
 
-        <div className="relative mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 md:mt-9">
+        <Stagger className="relative mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 md:mt-9">
           {workflowModules.map((mod) => (
-            <ModuleCard key={mod.id} mod={mod} />
+            <StaggerItem key={mod.id} variant="scale">
+              <ModuleCard mod={mod} />
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

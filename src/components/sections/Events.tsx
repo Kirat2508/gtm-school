@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { ChatRoundIcon } from "@solar-icons/react/linear/chat-round";
 import { CodeIcon } from "@solar-icons/react/linear/code";
 import { GlobalIcon } from "@solar-icons/react/linear/global";
@@ -7,7 +10,7 @@ import { RocketIcon } from "@solar-icons/react/linear/rocket";
 import { UsersGroupRoundedIcon } from "@solar-icons/react/linear/users-group-rounded";
 import { eventTopics, type EventTopic } from "@/content/events";
 import { site } from "@/content/site";
-import { FadeIn } from "@/lib/motion";
+import { FadeIn, RevealMedia } from "@/lib/motion";
 
 const iconMap = {
   users: UsersGroupRoundedIcon,
@@ -22,7 +25,17 @@ function EventRow({ topic }: { topic: EventTopic }) {
   const Icon = iconMap[topic.icon];
 
   return (
-    <li className="flex items-center gap-3 rounded-[10px] border border-[rgba(27,42,74,0.14)] bg-white/50 px-3.5 py-3 md:gap-3.5 md:px-4 md:py-3.5">
+    <motion.li
+      variants={{
+        hidden: { opacity: 0, x: -28 },
+        visible: {
+          opacity: 1,
+          x: 0,
+          transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        },
+      }}
+      className="flex items-center gap-3 rounded-[10px] border border-[rgba(27,42,74,0.14)] bg-white/50 px-3.5 py-3 md:gap-3.5 md:px-4 md:py-3.5"
+    >
       <Icon
         size={16}
         strokeWidth={1.55}
@@ -33,7 +46,7 @@ function EventRow({ topic }: { topic: EventTopic }) {
       <span className="text-[14px] leading-snug font-medium text-[#1B2A4A] md:text-[15px]">
         {topic.title}
       </span>
-    </li>
+    </motion.li>
   );
 }
 
@@ -137,14 +150,17 @@ export function Events() {
       >
         <Atmosphere />
         <div className="absolute right-[-4%] bottom-[-2%] h-[78%] w-[110%]">
-          <Image
-            src="/images/corner-house.png"
-            alt=""
-            fill
-            className="object-contain object-right-bottom"
-            sizes="46vw"
-            priority={false}
-          />
+          <RevealMedia className="absolute inset-0">
+            <Image
+              src="/images/corner-house.png"
+              alt=""
+              fill
+              className="object-contain object-right-bottom"
+              sizes="46vw"
+              loading="lazy"
+              quality={70}
+            />
+          </RevealMedia>
         </div>
         {/* Soft cream dissolve only on the left edge into the list */}
         <div
@@ -173,11 +189,22 @@ export function Events() {
               with operators and experts.
             </p>
 
-            <ul className="mt-8 flex flex-col gap-2.5 md:mt-9 md:gap-3">
+            <motion.ul
+              className="mt-8 flex flex-col gap-2.5 md:mt-9 md:gap-3"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+                },
+              }}
+            >
               {eventTopics.map((topic) => (
                 <EventRow key={topic.id} topic={topic} />
               ))}
-            </ul>
+            </motion.ul>
 
             <div className="mt-8 flex items-center gap-0 md:mt-9">
               <a
@@ -198,13 +225,17 @@ export function Events() {
           className="relative mx-auto mt-12 h-[260px] w-full max-w-md sm:h-[320px] lg:hidden"
           aria-hidden
         >
-          <Image
-            src="/images/corner-house.png"
-            alt=""
-            fill
-            className="object-contain object-bottom"
-            sizes="90vw"
-          />
+          <RevealMedia className="absolute inset-0">
+            <Image
+              src="/images/corner-house.png"
+              alt=""
+              fill
+              loading="lazy"
+              quality={70}
+              className="object-contain object-bottom"
+              sizes="90vw"
+            />
+          </RevealMedia>
         </div>
       </div>
     </section>

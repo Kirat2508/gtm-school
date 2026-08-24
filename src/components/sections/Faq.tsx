@@ -26,15 +26,15 @@ export function Faq() {
           {faqCards.map((card, i) => (
             <motion.article
               key={card.number}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.25 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{
-                duration: 0.55,
-                delay: i * 0.08,
+                duration: 0.65,
+                delay: i * 0.12,
                 ease: [0.22, 1, 0.36, 1],
               }}
-              whileHover={{ y: -8, transition: { duration: 0.25 } }}
+              initial={{ opacity: 0, y: 40, scale: 0.94 }}
+              whileHover={{ y: -10, transition: { duration: 0.25 } }}
               className={`relative ${card.y}`}
             >
               <div
@@ -50,6 +50,8 @@ export function Faq() {
                     src={card.image}
                     alt=""
                     fill
+                    loading="lazy"
+                    quality={60}
                     className="object-cover object-center opacity-[0.07] saturate-50"
                     sizes="(max-width: 1024px) 50vw, 25vw"
                   />

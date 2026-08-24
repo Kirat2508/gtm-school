@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { partnersAndSupportedBy } from "@/content/backed";
+import { FadeIn, Stagger, StaggerItem } from "@/lib/motion";
 
 function CornerMarks() {
   const arm = "absolute h-3 w-3 border-[#E8C547]";
@@ -40,20 +43,23 @@ export function BackedBy() {
       </svg>
 
       <div className="relative z-10 mx-auto max-w-[720px]">
-        <p className="text-center text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-          Partners and supported by
-        </p>
+        <FadeIn>
+          <p className="text-center text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
+            Partners and supported by
+          </p>
+        </FadeIn>
 
         <div className="relative mt-8 px-2 md:mt-10 md:px-3">
           <CornerMarks />
 
-          <div className="grid grid-cols-3">
+          <Stagger className="grid grid-cols-3" fast>
             {partnersAndSupportedBy.map((logo, i) => {
               const col = i % 3;
               const row = Math.floor(i / 3);
               return (
-                <div
+                <StaggerItem
                   key={logo.name}
+                  variant="pop"
                   className="relative flex min-h-[88px] items-center justify-center px-4 py-6 md:min-h-[100px] md:px-6 md:py-7"
                 >
                   <Image
@@ -62,30 +68,30 @@ export function BackedBy() {
                     width={140}
                     height={48}
                     unoptimized={logo.name === "Leap Scholar"}
+                    loading="lazy"
+                    quality={75}
                     className={`w-auto object-contain ${
                       logo.name === "Leap Scholar"
                         ? "h-7 max-w-[130px] md:h-8 md:max-w-[150px]"
                         : "h-8 max-w-[120px] md:h-9 md:max-w-[140px]"
                     }`}
                   />
-                  {/* vertical dividers between columns */}
                   {col < 2 ? (
                     <span
                       className="absolute top-[20%] right-0 bottom-[20%] w-px bg-[rgba(27,42,74,0.12)]"
                       aria-hidden
                     />
                   ) : null}
-                  {/* horizontal divider between rows */}
                   {row === 0 ? (
                     <span
                       className="absolute right-[12%] bottom-0 left-[12%] h-px bg-[rgba(27,42,74,0.1)]"
                       aria-hidden
                     />
                   ) : null}
-                </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { channelLogos } from "@/content/logos";
+import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
 
 function Atmosphere() {
   return (
@@ -83,21 +84,24 @@ export function Channels() {
 
       <Atmosphere />
 
-      {/* New blossom — larger, left-only; logos live in the right column only */}
-      <div className="pointer-events-none absolute bottom-0 left-0 z-[1] h-[78%] w-[min(48%,460px)] sm:w-[38%] lg:h-[95%] lg:w-[32%] xl:w-[34%]">
+      <RevealMedia className="pointer-events-none absolute bottom-0 left-0 z-[1] h-[78%] w-[min(48%,460px)] sm:w-[38%] lg:h-[95%] lg:w-[32%] xl:w-[34%]">
         <Image
           src="/images/cherry-blossom-new.png"
           alt=""
           fill
-          className="object-contain object-left-bottom scale-[1.28] origin-bottom-left"
+          loading="lazy"
+          quality={70}
+          className="origin-bottom-left scale-[1.28] object-contain object-left-bottom"
           sizes="(max-width: 1024px) 48vw, 34vw"
         />
-      </div>
+      </RevealMedia>
 
       <div className="relative z-10 mx-auto max-w-[1280px] px-5 py-20 md:px-10 md:py-24 lg:px-14 lg:py-28">
         <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-10 xl:gap-6">
-          {/* Copy — hero fonts: Fraunces headline, Inter body */}
-          <div className="relative z-10 max-w-xl pl-0 sm:pl-[14%] lg:pl-[22%] xl:pl-[24%]">
+          <FadeIn
+            direction="left"
+            className="relative z-10 max-w-xl pl-0 sm:pl-[14%] lg:pl-[22%] xl:pl-[24%]"
+          >
             <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
               Platforms and channels
             </p>
@@ -112,33 +116,38 @@ export function Channels() {
               <br />
               Walk in clueless, walk out dangerous.
             </p>
-          </div>
+          </FadeIn>
 
-          {/* Logos — right column only, never over blossom */}
-          <div className="relative z-10 mx-auto h-[340px] w-full max-w-[560px] sm:h-[400px] lg:mx-0 lg:ml-auto lg:h-[500px] lg:max-w-[560px] xl:h-[540px] xl:max-w-[600px]">
+          <Stagger
+            className="relative z-10 mx-auto h-[340px] w-full max-w-[560px] sm:h-[400px] lg:mx-0 lg:ml-auto lg:h-[500px] lg:max-w-[560px] xl:h-[540px] xl:max-w-[600px]"
+            fast
+          >
             {channelLogos.map((logo) => (
-              <div
-                key={logo.name}
-                className="channel-logo-float absolute"
-                style={{
-                  left: logo.x,
-                  top: logo.y,
-                  width: logo.size + 20,
-                  height: logo.size + 20,
-                  transform: `rotate(${logo.rotation}deg)`,
-                }}
-                title={logo.name}
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.name}
-                  width={logo.size}
-                  height={logo.size}
-                  className="h-auto w-full object-contain"
-                />
-              </div>
+              <StaggerItem key={logo.name} variant="pop">
+                <div
+                  className="channel-logo-float absolute"
+                  style={{
+                    left: logo.x,
+                    top: logo.y,
+                    width: logo.size + 20,
+                    height: logo.size + 20,
+                    transform: `rotate(${logo.rotation}deg)`,
+                  }}
+                  title={logo.name}
+                >
+                  <Image
+                    src={logo.src}
+                    alt={logo.name}
+                    width={logo.size}
+                    height={logo.size}
+                    loading="lazy"
+                    quality={70}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { BagIcon } from "@solar-icons/react/linear/bag";
 import { BuildingsIcon } from "@solar-icons/react/linear/buildings";
@@ -9,7 +11,7 @@ import { RocketIcon } from "@solar-icons/react/linear/rocket";
 import { UserIcon } from "@solar-icons/react/linear/user";
 import { UsersGroupRoundedIcon } from "@solar-icons/react/linear/users-group-rounded";
 import { audience, type AudienceTag } from "@/content/audience";
-import { FadeIn } from "@/lib/motion";
+import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
 
 const iconMap = {
   leaf: LeafIcon,
@@ -54,14 +56,10 @@ function AudiencePill({ tag }: { tag: AudienceTag }) {
 
 export function Audience() {
   return (
-    <section
-      id="about"
-      className="relative overflow-hidden bg-[#FBF6EE]"
-    >
+    <section id="about" className="relative overflow-hidden bg-[#FBF6EE]">
       <div className="relative mx-auto grid max-w-[1180px] items-center px-5 py-16 md:px-10 md:py-20 lg:grid-cols-12 lg:gap-6 lg:py-24 xl:gap-2">
-        {/* Left content ~40–45% */}
         <div className="relative z-10 lg:col-span-5 xl:col-span-5">
-          <FadeIn>
+          <FadeIn direction="left">
             <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
               Built for builders
             </p>
@@ -76,17 +74,21 @@ export function Audience() {
             <p className="mt-5 max-w-md text-[16px] leading-relaxed text-[#1B2A4A]/65 md:text-[17px]">
               If this sounds like you, you are in the right place.
             </p>
-
-            <div className="mt-8 flex max-w-xl flex-wrap gap-2.5 md:mt-9 md:gap-3">
-              {audience.map((tag) => (
-                <AudiencePill key={tag.id} tag={tag} />
-              ))}
-            </div>
           </FadeIn>
+
+          <Stagger
+            className="mt-8 flex max-w-xl flex-wrap gap-2.5 md:mt-9 md:gap-3"
+            fast
+          >
+            {audience.map((tag) => (
+              <StaggerItem key={tag.id} variant="pop">
+                <AudiencePill tag={tag} />
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
 
-        {/* Right illustration ~55–60% — integrated scene, not a card */}
-        <div className="relative mt-10 h-[280px] sm:h-[340px] md:mt-12 md:h-[400px] lg:col-span-7 lg:mt-0 lg:h-[min(560px,68vh)] xl:h-[min(600px,70vh)]">
+        <RevealMedia className="relative mt-10 h-[280px] sm:h-[340px] md:mt-12 md:h-[400px] lg:col-span-7 lg:mt-0 lg:h-[min(560px,68vh)] xl:h-[min(600px,70vh)]">
           <div
             className="absolute inset-0 lg:-right-8 lg:-bottom-10 lg:left-[-6%] xl:-right-14"
             style={{
@@ -102,13 +104,13 @@ export function Audience() {
               src="/images/sunset-glasshouse.png"
               alt="Lalbagh Glass House at sunset — illustrated Bangalore landmark"
               fill
-              priority={false}
+              loading="lazy"
+              quality={72}
               className="object-contain object-right-bottom scale-[1.06] lg:scale-[1.12] lg:object-center"
               sizes="(max-width: 1024px) 100vw, 58vw"
             />
           </div>
 
-          {/* Soft cream wash so edges dissolve into the section */}
           <div
             className="pointer-events-none absolute inset-0"
             style={{
@@ -117,7 +119,7 @@ export function Audience() {
             }}
             aria-hidden
           />
-        </div>
+        </RevealMedia>
       </div>
     </section>
   );
