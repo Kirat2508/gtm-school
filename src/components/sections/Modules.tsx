@@ -7,6 +7,7 @@ import { TargetIcon } from "@solar-icons/react/bold-duotone/target";
 import { UsersGroupRoundedIcon } from "@solar-icons/react/bold-duotone/users-group-rounded";
 import { workflowModules, type WorkflowModule } from "@/content/workflow";
 import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
 
 const icons = {
   building: BuildingsIcon,
@@ -20,13 +21,13 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
 
   return (
     <article
-      className="module-card relative flex min-h-[156px] overflow-hidden rounded-[16px] border md:min-h-[168px]"
+      className="module-card relative flex min-h-[200px] overflow-hidden rounded-[16px] border md:min-h-[220px]"
       style={{
         backgroundColor: mod.tint,
         borderColor: mod.border,
       }}
     >
-      <div className="relative z-10 flex max-w-[52%] flex-col p-4 md:max-w-[50%] md:p-5">
+      <div className="relative z-10 flex w-[68%] flex-col p-4 pr-3 md:w-[64%] md:p-5 md:pr-4">
         <span
           className="mb-2.5 inline-flex h-7 w-7 items-center justify-center rounded-full text-white"
           style={{ backgroundColor: mod.badge }}
@@ -39,20 +40,12 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
           {mod.number}. {mod.title}
         </h3>
 
-        <p className="mt-1.5 flex-1 text-[12px] leading-relaxed text-[#1B2A4A]/80 md:text-[13px]">
+        <p className="mt-2 text-[12.5px] leading-relaxed text-[#1B2A4A]/80 md:mt-2.5 md:text-[13.5px] md:leading-[1.55]">
           {mod.description}
         </p>
-
-        <a
-          href={mod.href}
-          className="mt-3 inline-flex items-center text-[12px] font-semibold transition-opacity hover:opacity-70"
-          style={{ color: mod.badge }}
-        >
-          {mod.cta}
-        </a>
       </div>
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-[54%] md:w-[52%]">
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[42%] md:w-[44%]">
         <Image
           src={mod.image}
           alt=""
@@ -60,7 +53,7 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
           loading="lazy"
           quality={70}
           className="origin-bottom-right scale-[1.08] object-contain object-right-bottom opacity-95"
-          sizes="(max-width: 768px) 50vw, 24vw"
+          sizes="(max-width: 768px) 42vw, 22vw"
         />
       </div>
     </article>
@@ -69,8 +62,12 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
 
 export function Modules() {
   return (
-    <section id="topics" className="relative overflow-hidden bg-[#FBF6EE]">
-      <RevealMedia className="pointer-events-none absolute bottom-0 left-0 z-0 h-[70%] w-[min(90%,880px)] opacity-[0.68] sm:h-[76%] sm:w-[72%] lg:h-[86%] lg:w-[62%] xl:w-[60%]">
+    <section id="topics" className="relative overflow-hidden bg-white">
+      <RevealMedia
+        variant="bloom"
+        float={false}
+        className="pointer-events-none absolute bottom-0 left-0 z-0 h-[70%] w-[min(90%,880px)] opacity-[0.68] sm:h-[76%] sm:w-[72%] lg:h-[86%] lg:w-[62%] xl:w-[60%]"
+      >
         <Image
           src="/images/blr-infra.png"
           alt=""
@@ -104,17 +101,14 @@ export function Modules() {
 
       <div className="relative z-10 mx-auto max-w-[920px] px-5 py-14 md:px-10 md:py-16 lg:py-18">
         <FadeIn className="mx-auto max-w-2xl text-center">
-          <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-            GTM series
-          </p>
-          <h2 className="section-headline mt-3 text-[32px] leading-tight text-[#1B2A4A] md:text-[40px] lg:text-[44px]">
-            Supercharge your workflow
+          <h2 className="section-headline text-[32px] leading-tight md:text-[40px] lg:text-[44px]">
+            The curriculum, <HeadlineItalic>in four parts</HeadlineItalic>
           </h2>
         </FadeIn>
 
         <Stagger className="relative mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 md:mt-9">
           {workflowModules.map((mod) => (
-            <StaggerItem key={mod.id} variant="scale">
+            <StaggerItem key={mod.id} variant="pop">
               <ModuleCard mod={mod} />
             </StaggerItem>
           ))}

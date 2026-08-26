@@ -12,6 +12,8 @@ import { UserIcon } from "@solar-icons/react/linear/user";
 import { UsersGroupRoundedIcon } from "@solar-icons/react/linear/users-group-rounded";
 import { audience, type AudienceTag } from "@/content/audience";
 import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
+import { CursorFloatTips } from "@/components/ui/CursorFloatTips";
 
 const iconMap = {
   leaf: LeafIcon,
@@ -56,19 +58,14 @@ function AudiencePill({ tag }: { tag: AudienceTag }) {
 
 export function Audience() {
   return (
-    <section id="about" className="relative overflow-hidden bg-[#FBF6EE]">
+    <section id="about" className="relative overflow-hidden bg-white">
       <div className="relative mx-auto grid max-w-[1180px] items-center px-5 py-16 md:px-10 md:py-20 lg:grid-cols-12 lg:gap-6 lg:py-24 xl:gap-2">
         <div className="relative z-10 lg:col-span-5 xl:col-span-5">
           <FadeIn direction="left">
-            <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-              Built for builders
-            </p>
-
-            <h2 className="section-headline mt-4 text-[34px] leading-[1.12] text-[#1B2A4A] md:text-[44px] lg:text-[48px]">
+            <h2 className="section-headline text-[34px] leading-[1.12] md:text-[44px] lg:text-[48px]">
               Built for the way
               <br />
-              builders{" "}
-              <span className="text-[#E8C547]">sell.</span>
+              builders <HeadlineItalic>sell.</HeadlineItalic>
             </h2>
 
             <p className="mt-5 max-w-md text-[16px] leading-relaxed text-[#1B2A4A]/65 md:text-[17px]">
@@ -76,28 +73,31 @@ export function Audience() {
             </p>
           </FadeIn>
 
-          <Stagger
-            className="mt-8 flex max-w-xl flex-wrap gap-2.5 md:mt-9 md:gap-3"
-            fast
-          >
-            {audience.map((tag) => (
-              <StaggerItem key={tag.id} variant="pop">
-                <AudiencePill tag={tag} />
-              </StaggerItem>
-            ))}
-          </Stagger>
+          <CursorFloatTips>
+            <Stagger
+              className="mt-8 flex max-w-xl flex-wrap gap-2.5 md:mt-9 md:gap-3"
+              fast
+            >
+              {audience.map((tag) => (
+                <StaggerItem key={tag.id} variant="pop">
+                  <AudiencePill tag={tag} />
+                </StaggerItem>
+              ))}
+            </Stagger>
+          </CursorFloatTips>
         </div>
 
-        <RevealMedia className="relative mt-10 h-[280px] sm:h-[340px] md:mt-12 md:h-[400px] lg:col-span-7 lg:mt-0 lg:h-[min(560px,68vh)] xl:h-[min(600px,70vh)]">
+        <RevealMedia
+          variant="drift"
+          className="relative mt-10 h-[300px] w-full overflow-hidden sm:h-[380px] md:mt-12 md:h-[440px] lg:col-span-7 lg:mt-0 lg:h-[min(620px,72vh)] xl:h-[min(660px,74vh)]"
+        >
           <div
-            className="absolute inset-0 lg:-right-8 lg:-bottom-10 lg:left-[-6%] xl:-right-14"
+            className="absolute inset-0 overflow-hidden"
             style={{
               maskImage:
-                "linear-gradient(to right, transparent 0%, black 12%, black 100%), linear-gradient(to top, transparent 0%, black 14%, black 100%)",
+                "linear-gradient(90deg, transparent 0%, black 14%, black 100%)",
               WebkitMaskImage:
-                "linear-gradient(to right, transparent 0%, black 12%, black 100%), linear-gradient(to top, transparent 0%, black 14%, black 100%)",
-              maskComposite: "intersect",
-              WebkitMaskComposite: "source-in",
+                "linear-gradient(90deg, transparent 0%, black 14%, black 100%)",
             }}
           >
             <Image
@@ -105,20 +105,11 @@ export function Audience() {
               alt="Lalbagh Glass House at sunset — illustrated Bangalore landmark"
               fill
               loading="lazy"
-              quality={72}
-              className="object-contain object-right-bottom scale-[1.06] lg:scale-[1.12] lg:object-center"
+              quality={75}
+              className="origin-bottom-right scale-[1.14] object-contain object-right-bottom md:scale-[1.18]"
               sizes="(max-width: 1024px) 100vw, 58vw"
             />
           </div>
-
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(90deg, #FBF6EE 0%, rgba(251,246,238,0.55) 14%, rgba(251,246,238,0) 38%), linear-gradient(0deg, #FBF6EE 0%, rgba(251,246,238,0.4) 12%, rgba(251,246,238,0) 32%)",
-            }}
-            aria-hidden
-          />
         </RevealMedia>
       </div>
     </section>

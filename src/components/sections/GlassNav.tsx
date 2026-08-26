@@ -1,6 +1,6 @@
 "use client";
 
-import { RocketIcon } from "@solar-icons/react/bold-duotone/rocket";
+import Image from "next/image";
 import { site } from "@/content/site";
 
 const links = [
@@ -15,10 +15,16 @@ const links = [
 export function GlassNav() {
   return (
     <nav className="glass-nav" aria-label="Primary">
-      <a href="#" className="glass-nav-logo" aria-label="The GTM School">
-        <span className="glass-nav-rocket">
-          <RocketIcon size={15} />
-        </span>
+      <a href="#" className="glass-nav-logo" aria-label="AI Learn Circle × WIPM">
+        <Image
+          src="/images/ailc-wipm-nav-logo.png"
+          alt=""
+          width={872}
+          height={274}
+          className="h-7 w-auto max-w-[148px] object-contain md:h-8 md:max-w-[168px]"
+          priority
+          quality={90}
+        />
       </a>
 
       <span className="glass-nav-rule" aria-hidden />

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { channelLogos } from "@/content/logos";
 import { FadeIn, RevealMedia, Stagger, StaggerItem } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
 
 function Atmosphere() {
   return (
@@ -71,7 +72,7 @@ export function Channels() {
   return (
     <section
       id="channels"
-      className="channels-editorial relative overflow-hidden bg-[#FBF6EE]"
+      className="channels-editorial relative overflow-hidden bg-white"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.35]"
@@ -84,7 +85,11 @@ export function Channels() {
 
       <Atmosphere />
 
-      <RevealMedia className="pointer-events-none absolute bottom-0 left-0 z-[1] h-[78%] w-[min(48%,460px)] sm:w-[38%] lg:h-[95%] lg:w-[32%] xl:w-[34%]">
+      <RevealMedia
+        variant="wipe"
+        float={false}
+        className="pointer-events-none absolute bottom-0 left-0 z-[1] h-[78%] w-[min(48%,460px)] sm:w-[38%] lg:h-[95%] lg:w-[32%] xl:w-[34%]"
+      >
         <Image
           src="/images/cherry-blossom-new.png"
           alt=""
@@ -102,19 +107,14 @@ export function Channels() {
             direction="left"
             className="relative z-10 max-w-xl pl-0 sm:pl-[14%] lg:pl-[22%] xl:pl-[24%]"
           >
-            <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-              Platforms and channels
-            </p>
-
-            <h2 className="section-headline mt-5 text-[34px] leading-[1.15] text-[#1B2A4A] md:text-[44px] lg:text-[48px]">
+            <h2 className="section-headline text-[34px] leading-[1.15] md:text-[44px] lg:text-[48px]">
               Every channel your buyers{" "}
-              <em className="italic text-[#E8C547]">actually live on.</em>
+              <HeadlineItalic>actually live on.</HeadlineItalic>
             </h2>
 
             <p className="mt-6 max-w-[28rem] text-[15px] leading-relaxed text-[#1B2A4A]/85 md:text-[16px]">
-              From LinkedIn to Reddit to Product Hunt.
-              <br />
-              Walk in clueless, walk out dangerous.
+              LinkedIn, Reddit, Product Hunt, AI search. Walk in with a hunch,
+              walk out with a playbook.
             </p>
           </FadeIn>
 
@@ -122,7 +122,7 @@ export function Channels() {
             className="relative z-10 mx-auto h-[340px] w-full max-w-[560px] sm:h-[400px] lg:mx-0 lg:ml-auto lg:h-[500px] lg:max-w-[560px] xl:h-[540px] xl:max-w-[600px]"
             fast
           >
-            {channelLogos.map((logo) => (
+            {channelLogos.map((logo, i) => (
               <StaggerItem key={logo.name} variant="pop">
                 <div
                   className="channel-logo-float absolute"
@@ -132,6 +132,8 @@ export function Channels() {
                     width: logo.size + 20,
                     height: logo.size + 20,
                     transform: `rotate(${logo.rotation}deg)`,
+                    animationDelay: `${(i % 5) * 0.35}s`,
+                    animationDuration: `${4.6 + (i % 3) * 0.5}s`,
                   }}
                   title={logo.name}
                 >

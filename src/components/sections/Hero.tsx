@@ -7,66 +7,12 @@ export function Hero() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="relative overflow-hidden bg-[#FBF6EE]">
+    <section className="relative overflow-hidden bg-white">
       <div className="relative mx-auto max-w-[1280px] lg:min-h-[560px] xl:min-h-[600px]">
-        <motion.div
-          className="pointer-events-none relative z-0 mx-auto mt-4 w-[min(100%,480px)] sm:w-[80%] lg:absolute lg:right-0 lg:bottom-0 lg:mt-0 lg:w-[62%] xl:w-[64%]"
-          initial={reduce ? false : { opacity: 0, x: 48, scale: 1.04 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-        >
-          <Image
-            src="/images/vidhana-soudha-hero.webp"
-            alt="Vidhana Soudha, Bangalore"
-            width={1672}
-            height={941}
-            priority
-            quality={78}
-            className="h-auto w-full select-none object-contain object-right-bottom"
-            sizes="(max-width: 1024px) 90vw, 64vw"
-          />
-        </motion.div>
-
-        <div className="relative z-10 max-w-[400px] px-5 pb-10 pt-6 md:max-w-[440px] md:px-10 lg:ml-8 lg:max-w-[480px] lg:px-14 lg:pt-10 lg:pb-16 xl:ml-12 xl:max-w-[500px]">
-          <motion.div
-            className="flex flex-wrap items-center gap-3 md:gap-4"
-            initial={reduce ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Image
-              src="/images/ailc-logo.png"
-              alt="AI Learn Circle"
-              width={220}
-              height={64}
-              className="h-[52px] w-auto max-w-[200px] object-contain object-left md:h-[56px] md:max-w-[220px]"
-              priority
-              quality={80}
-            />
-            <span
-              className="font-editorial text-[14px] text-[#1B2A4A]/45"
-              aria-hidden
-            >
-              ×
-            </span>
-            <Image
-              src="/images/wipm-logo.png"
-              alt="Women in Product Marketing"
-              width={260}
-              height={64}
-              className="h-[52px] w-auto max-w-[220px] object-contain object-left md:h-[56px] md:max-w-[240px]"
-              priority
-              quality={80}
-            />
-          </motion.div>
-          <motion.p
-            className="font-editorial mt-1.5 text-[11px] font-normal tracking-[0.02em] text-[#E8C547]/90 italic md:text-[12px]"
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            presents
-          </motion.p>
+        {/* Text first in DOM so mobile shows GTM School before the landmark */}
+        <div className="relative z-10 max-w-[440px] px-5 pb-6 pt-6 md:max-w-[480px] md:px-10 lg:ml-8 lg:max-w-[520px] lg:px-14 lg:pt-10 lg:pb-16 xl:ml-12 xl:max-w-[540px]">
+          {/* Spacer: keeps room formerly used by logos + "presents" */}
+          <div className="h-[62px] md:h-[68px]" aria-hidden />
 
           <motion.h1
             className="hero-gtm-title mt-5"
@@ -82,23 +28,42 @@ export function Hero() {
           </motion.h1>
 
           <motion.p
-            className="mt-6 max-w-[340px] text-[14px] leading-relaxed text-[#1B2A4A]/80 md:mt-7 md:text-[15px]"
+            className="mt-6 max-w-[360px] text-[14px] leading-relaxed text-[#1B2A4A]/80 md:mt-7 md:text-[15px]"
             initial={reduce ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            20 hands-on sessions. 6 weeks. The complete go-to-market education for
-            builders who are done guessing and ready to sell.
+            20 hands-on sessions. Free. In person, in Bangalore.
+          </motion.p>
+
+          <motion.p
+            className="mt-3 max-w-[360px] text-[14px] leading-relaxed text-[#1B2A4A]/80 md:text-[15px]"
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          >
+            The complete go-to-market playbook for builders who are done guessing
+            and ready to sell.
+          </motion.p>
+
+          <motion.p
+            className="mt-3 max-w-[360px] text-[14px] leading-relaxed text-[#1B2A4A]/80 md:text-[15px]"
+            initial={reduce ? false : { opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.54, ease: [0.22, 1, 0.36, 1] }}
+          >
+            Every session ends with something you ship: a written ICP, a live
+            landing page, a working agent.
           </motion.p>
 
           <motion.div
-            className="relative mt-4 inline-block"
+            className="relative mt-5 inline-block"
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.5 }}
+            transition={{ duration: 0.55, delay: 0.58 }}
           >
             <p className="font-editorial text-[18px] font-semibold text-[#1B2A4A] md:text-[20px]">
-              28 Aug to 3rd Oct
+              28 August to 3 October
             </p>
             <svg
               className="pointer-events-none absolute -bottom-1 left-0 w-[108%] max-w-none"
@@ -120,16 +85,59 @@ export function Hero() {
             className="mt-7"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.6 }}
+            transition={{ duration: 0.55, delay: 0.65 }}
           >
             <a href="#events" className="hero-cta-grow">
-              Let&apos;s grow
+              Save your seat
             </a>
             <p className="mt-3 text-[12px] text-[#1B2A4A]/70">
               In-person only. Limited seats per session.
             </p>
           </motion.div>
         </div>
+
+        {/* Absolute on desktop (unchanged); stacks under copy on mobile */}
+        <motion.div
+          className="pointer-events-none relative z-0 mx-auto mt-2 w-[min(100%,480px)] pb-6 sm:w-[80%] lg:absolute lg:right-0 lg:bottom-10 lg:mt-0 lg:w-[62%] lg:-translate-y-3 lg:pb-0 xl:bottom-12 xl:w-[64%] xl:-translate-y-4"
+          initial={
+            reduce
+              ? false
+              : {
+                  opacity: 0,
+                  x: 72,
+                  y: 36,
+                  scale: 1.12,
+                  filter: "blur(10px)",
+                  rotate: 1.5,
+                }
+          }
+          animate={{
+            opacity: 1,
+            x: 0,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            rotate: 0,
+          }}
+          transition={{
+            duration: 1.25,
+            ease: [0.22, 1, 0.36, 1],
+            delay: 0.2,
+          }}
+        >
+          <div className={reduce ? undefined : "media-float"}>
+            <Image
+              src="/images/vidhana-soudha-hero.webp"
+              alt="Vidhana Soudha, Bangalore"
+              width={1672}
+              height={941}
+              priority
+              quality={78}
+              className="h-auto w-full select-none object-contain object-right-bottom"
+              sizes="(max-width: 1024px) 90vw, 64vw"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );

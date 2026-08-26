@@ -4,9 +4,20 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 const ease = [0.22, 1, 0.36, 1] as const;
+const springSoft = { type: "spring" as const, stiffness: 120, damping: 18 };
+const springPop = { type: "spring" as const, stiffness: 260, damping: 18 };
 
 const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 36 },
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.75, ease },
+  },
+};
+
+const fadeDown: Variants = {
+  hidden: { opacity: 0, y: -32 },
   visible: {
     opacity: 1,
     y: 0,
@@ -14,64 +25,56 @@ const fadeUp: Variants = {
   },
 };
 
-const fadeDown: Variants = {
-  hidden: { opacity: 0, y: -28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease },
-  },
-};
-
 const fadeLeft: Variants = {
-  hidden: { opacity: 0, x: -40 },
+  hidden: { opacity: 0, x: -48 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.75, ease },
+    transition: { duration: 0.8, ease },
   },
 };
 
 const fadeRight: Variants = {
-  hidden: { opacity: 0, x: 40 },
+  hidden: { opacity: 0, x: 48 },
   visible: {
     opacity: 1,
     x: 0,
-    transition: { duration: 0.75, ease },
+    transition: { duration: 0.8, ease },
   },
 };
 
 const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.88, y: 24 },
+  hidden: { opacity: 0, scale: 0.86, y: 28 },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.75, ease },
+    transition: { duration: 0.8, ease },
   },
 };
 
 const popIn: Variants = {
-  hidden: { opacity: 0, scale: 0.72, rotate: -4 },
+  hidden: { opacity: 0, scale: 0.68, rotate: -6, y: 12 },
   visible: {
     opacity: 1,
     scale: 1,
     rotate: 0,
-    transition: { type: "spring", stiffness: 280, damping: 18 },
+    y: 0,
+    transition: springPop,
   },
 };
 
 const stagger: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.1, delayChildren: 0.08 },
+    transition: { staggerChildren: 0.11, delayChildren: 0.1 },
   },
 };
 
 const staggerFast: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.06, delayChildren: 0.04 },
+    transition: { staggerChildren: 0.07, delayChildren: 0.05 },
   },
 };
 
@@ -158,22 +161,76 @@ export function StaggerItem({
   );
 }
 
-/** Image / media reveal with scale + fade */
+type RevealVariant = "rise" | "bloom" | "wipe" | "drift";
+
+const revealPresets: Record<
+  RevealVariant,
+  {
+    initial: Record<string, number | string>;
+    animate: Record<string, number | string>;
+    transition: Record<string, unknown>;
+  }
+> = {
+  /** Classic settle from below with slight overshoot */
+  rise: {
+    initial: { opacity: 0, scale: 1.12, y: 56, filter: "blur(8px)" },
+    animate: { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" },
+    transition: { duration: 1.05, ease },
+  },
+  /** Soft bloom — blur clears as it scales in */
+  bloom: {
+    initial: { opacity: 0, scale: 0.82, rotate: -2, filter: "blur(12px)" },
+    animate: { opacity: 1, scale: 1, rotate: 0, filter: "blur(0px)" },
+    transition: { duration: 1.1, ease },
+  },
+  /** Clip wipe upward like a curtain lifting */
+  wipe: {
+    initial: {
+      opacity: 0.35,
+      clipPath: "inset(18% 8% 0% 8% round 12px)",
+      scale: 1.06,
+      y: 28,
+    },
+    animate: {
+      opacity: 1,
+      clipPath: "inset(0% 0% 0% 0%)",
+      scale: 1,
+      y: 0,
+    },
+    transition: { duration: 1.15, ease },
+  },
+  /** Slides in from the side with spring settle */
+  drift: {
+    initial: { opacity: 0, x: 64, scale: 1.05, rotate: 1.5 },
+    animate: { opacity: 1, x: 0, scale: 1, rotate: 0 },
+    transition: { ...springSoft, mass: 0.9 },
+  },
+};
+
+/** Image / media reveal — pick a variant for variety across sections */
 export function RevealMedia({
   children,
   className = "",
   delay = 0,
-}: Props) {
+  variant = "rise",
+  float = true,
+}: Props & { variant?: RevealVariant; float?: boolean }) {
   const reduce = useReducedMotion();
+  const preset = revealPresets[variant];
+
   return (
     <motion.div
       className={className}
-      initial={reduce ? false : { opacity: 0, scale: 1.08, y: 40 }}
-      whileInView={reduce ? undefined : { opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.9, delay, ease }}
+      initial={reduce ? false : preset.initial}
+      whileInView={reduce ? undefined : preset.animate}
+      viewport={{ once: true, amount: 0.18 }}
+      transition={{ ...preset.transition, delay }}
     >
-      {children}
+      <div
+        className={`relative h-full w-full${float && !reduce ? " media-float" : ""}`}
+      >
+        {children}
+      </div>
     </motion.div>
   );
 }

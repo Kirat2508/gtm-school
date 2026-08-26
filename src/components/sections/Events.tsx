@@ -11,6 +11,7 @@ import { UsersGroupRoundedIcon } from "@solar-icons/react/linear/users-group-rou
 import { eventTopics, type EventTopic } from "@/content/events";
 import { site } from "@/content/site";
 import { FadeIn, RevealMedia } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
 
 const iconMap = {
   users: UsersGroupRoundedIcon,
@@ -27,11 +28,13 @@ function EventRow({ topic }: { topic: EventTopic }) {
   return (
     <motion.li
       variants={{
-        hidden: { opacity: 0, x: -28 },
+        hidden: { opacity: 0, x: -42, y: 14, scale: 0.96 },
         visible: {
           opacity: 1,
           x: 0,
-          transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+          y: 0,
+          scale: 1,
+          transition: { type: "spring", stiffness: 220, damping: 20 },
         },
       }}
       className="flex items-center gap-3 rounded-[10px] border border-[rgba(27,42,74,0.14)] bg-white/50 px-3.5 py-3 md:gap-3.5 md:px-4 md:py-3.5"
@@ -43,7 +46,7 @@ function EventRow({ topic }: { topic: EventTopic }) {
         className="shrink-0 opacity-90"
         aria-hidden
       />
-      <span className="text-[14px] leading-snug font-medium text-[#1B2A4A] md:text-[15px]">
+      <span className="font-editorial text-[14px] leading-snug font-semibold text-[#1B2A4A] md:text-[15px]">
         {topic.title}
       </span>
     </motion.li>
@@ -142,46 +145,44 @@ function Atmosphere() {
 
 export function Events() {
   return (
-    <section id="events" className="relative overflow-hidden bg-[#FBF6EE]">
-      {/* Corner House — anchored to the right, no aggressive mask washout */}
+    <section id="events" className="relative overflow-hidden bg-white">
+      {/* Corner House — right-anchored; fade via mask only (no white overlay) */}
       <div
-        className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[46%] lg:block"
+        className="pointer-events-none absolute inset-y-0 right-0 z-0 hidden w-[min(56%,680px)] overflow-hidden lg:block"
         aria-hidden
+        style={{
+          maskImage:
+            "linear-gradient(90deg, transparent 0%, black 16%, black 100%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent 0%, black 16%, black 100%)",
+        }}
       >
         <Atmosphere />
-        <div className="absolute right-[-4%] bottom-[-2%] h-[78%] w-[110%]">
-          <RevealMedia className="absolute inset-0">
+        <div className="absolute inset-x-0 bottom-0 h-[92%]">
+          <RevealMedia
+            variant="wipe"
+            className="absolute inset-0 overflow-hidden"
+          >
             <Image
               src="/images/corner-house.png"
               alt=""
               fill
-              className="object-contain object-right-bottom"
-              sizes="46vw"
+              className="origin-bottom-right scale-[1.12] object-contain object-right-bottom"
+              sizes="680px"
               loading="lazy"
-              quality={70}
+              quality={75}
             />
           </RevealMedia>
         </div>
-        {/* Soft cream dissolve only on the left edge into the list */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, #FBF6EE 0%, rgba(251,246,238,0.92) 10%, rgba(251,246,238,0.35) 28%, rgba(251,246,238,0) 48%)",
-          }}
-        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1120px] px-5 py-16 md:px-10 md:py-20 lg:py-24">
         <div className="relative max-w-xl lg:max-w-[560px]">
           <FadeIn>
-            <p className="text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-              GTM series
-            </p>
-            <h2 className="section-headline mt-3 text-[32px] leading-[1.12] text-[#1B2A4A] md:text-[40px] lg:text-[44px]">
+            <h2 className="section-headline text-[32px] leading-[1.12] md:text-[40px] lg:text-[44px]">
               Events to build, grow
               <br />
-              and scale your GTM.
+              and <HeadlineItalic>scale your GTM.</HeadlineItalic>
             </h2>
             <p className="mt-4 text-[15px] leading-relaxed text-[#1B2A4A]/65 md:text-[16px]">
               Curated sessions, workshops and conversations
@@ -197,7 +198,7 @@ export function Events() {
               variants={{
                 hidden: {},
                 visible: {
-                  transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+                  transition: { staggerChildren: 0.14, delayChildren: 0.08 },
                 },
               }}
             >
@@ -220,19 +221,22 @@ export function Events() {
           </FadeIn>
         </div>
 
-        {/* Mobile / tablet house — below content, clear and unmasked */}
+        {/* Mobile / tablet house — below content */}
         <div
-          className="relative mx-auto mt-12 h-[260px] w-full max-w-md sm:h-[320px] lg:hidden"
+          className="relative mx-auto mt-12 h-[300px] w-full max-w-lg overflow-hidden sm:h-[360px] lg:hidden"
           aria-hidden
         >
-          <RevealMedia className="absolute inset-0">
+          <RevealMedia
+            variant="wipe"
+            className="absolute inset-0 overflow-hidden"
+          >
             <Image
               src="/images/corner-house.png"
               alt=""
               fill
               loading="lazy"
-              quality={70}
-              className="object-contain object-bottom"
+              quality={75}
+              className="origin-bottom scale-[1.1] object-contain object-bottom"
               sizes="90vw"
             />
           </RevealMedia>

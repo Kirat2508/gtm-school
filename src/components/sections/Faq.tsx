@@ -4,17 +4,18 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { faqCards } from "@/content/faq";
 import { FadeIn } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
 
 export function Faq() {
   return (
-    <section id="faq" className="relative bg-[#FBF6EE] section-pad">
+    <section id="faq" className="relative bg-white section-pad">
       <div className="container-page">
         <FadeIn>
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="section-headline text-[30px] leading-tight text-[#1B2A4A] md:text-[42px]">
+            <h2 className="section-headline text-[30px] leading-tight md:text-[42px]">
               4 questions that might
               <br />
-              <em className="italic">be useful for you</em>
+              <HeadlineItalic>be useful for you</HeadlineItalic>
             </h2>
             <p className="mt-3 text-[15px] text-[#6B5B50] md:text-[16px]">
               Quick way to understand your immediate needs
@@ -22,29 +23,47 @@ export function Faq() {
           </div>
         </FadeIn>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:mt-16 lg:grid-cols-4 lg:items-start lg:gap-8 lg:pb-4">
+        <div
+          className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7 lg:mt-16 lg:grid-cols-4 lg:items-start lg:gap-8 lg:pb-4"
+          style={{ perspective: 1200 }}
+        >
           {faqCards.map((card, i) => (
             <motion.article
               key={card.number}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{
-                duration: 0.65,
-                delay: i * 0.12,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              initial={{ opacity: 0, y: 40, scale: 0.94 }}
-              whileHover={{ y: -10, transition: { duration: 0.25 } }}
               className={`relative ${card.y}`}
+              style={{ transformStyle: "preserve-3d" }}
+              initial={{
+                opacity: 0,
+                y: -80,
+                rotateX: 55,
+                rotateZ: i % 2 === 0 ? -8 : 8,
+                scale: 0.9,
+              }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                rotateZ: 0,
+                scale: 1,
+              }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{
+                type: "spring",
+                stiffness: 120,
+                damping: 16,
+                delay: i * 0.14,
+              }}
+              whileHover={{ y: -10, transition: { duration: 0.25 } }}
             >
               <div
                 className="relative flex min-h-[260px] flex-col overflow-hidden rounded-[22px] border p-6 shadow-[0_8px_28px_rgba(26,18,16,0.08)] md:min-h-[300px] md:rounded-[24px] md:p-7"
                 style={{
                   backgroundColor: card.tintSolid,
                   borderColor: card.border,
+                  transformStyle: "preserve-3d",
+                  backfaceVisibility: "hidden",
                 }}
               >
-                {/* Real BLR monument — very light so Q/A stays primary */}
                 <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[22px] md:rounded-[24px]">
                   <Image
                     src={card.image}

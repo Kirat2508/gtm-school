@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { partnersAndSupportedBy } from "@/content/backed";
 import { FadeIn, Stagger, StaggerItem } from "@/lib/motion";
+import { HeadlineItalic } from "@/components/ui/HeadlineItalic";
 
 function CornerMarks() {
   const arm = "absolute h-3 w-3 border-[#E8C547]";
@@ -16,11 +18,61 @@ function CornerMarks() {
   );
 }
 
+function PartnerLogo({
+  logo,
+  showDivider,
+  showMobileDivider,
+  large,
+}: {
+  logo: (typeof partnersAndSupportedBy)[number];
+  showDivider?: boolean;
+  showMobileDivider?: boolean;
+  large?: boolean;
+}) {
+  return (
+    <StaggerItem variant="pop" className="relative">
+      <motion.div
+        className="relative flex min-h-[96px] items-center justify-center px-3 py-5 md:min-h-[110px] md:px-4 md:py-6"
+        whileHover={{ scale: 1.06, y: -2 }}
+        transition={{ type: "spring", stiffness: 320, damping: 18 }}
+      >
+        <Image
+          src={logo.src}
+          alt={logo.name}
+          width={600}
+          height={200}
+          unoptimized
+          className={
+            large
+              ? "h-14 w-auto max-w-[200px] object-contain object-center md:h-16 md:max-w-[220px]"
+              : "h-11 w-auto max-w-[150px] object-contain object-center md:h-12 md:max-w-[170px]"
+          }
+        />
+        {showDivider ? (
+          <span
+            className="absolute top-[22%] right-0 bottom-[22%] hidden w-px bg-[rgba(27,42,74,0.12)] sm:block"
+            aria-hidden
+          />
+        ) : null}
+        {showMobileDivider ? (
+          <span
+            className="absolute top-[22%] right-0 bottom-[22%] w-px bg-[rgba(27,42,74,0.12)] sm:hidden"
+            aria-hidden
+          />
+        ) : null}
+      </motion.div>
+    </StaggerItem>
+  );
+}
+
 export function BackedBy() {
+  const row1 = partnersAndSupportedBy.slice(0, 4);
+  const row2 = partnersAndSupportedBy.slice(4, 7);
+
   return (
     <section
       id="partners"
-      className="relative overflow-hidden bg-[#FBF6EE] px-5 py-14 md:px-10 md:py-16"
+      className="relative bg-white px-5 py-14 md:px-10 md:py-16"
     >
       <svg
         className="pointer-events-none absolute top-10 right-[8%] hidden h-12 w-16 opacity-25 md:block"
@@ -42,55 +94,39 @@ export function BackedBy() {
         />
       </svg>
 
-      <div className="relative z-10 mx-auto max-w-[720px]">
-        <FadeIn>
-          <p className="text-center text-[11px] font-medium tracking-[0.06em] text-[#E8C547]">
-            Partners and supported by
-          </p>
+      <div className="relative z-10 mx-auto max-w-[920px]">
+        <FadeIn className="text-center">
+          <h2 className="section-headline text-[32px] leading-tight md:text-[40px] lg:text-[44px]">
+            Partners and <HeadlineItalic>supported by</HeadlineItalic>
+          </h2>
         </FadeIn>
 
-        <div className="relative mt-8 px-2 md:mt-10 md:px-3">
+        <div className="relative mt-8 px-2 md:mt-10 md:px-4">
           <CornerMarks />
 
-          <Stagger className="grid grid-cols-3" fast>
-            {partnersAndSupportedBy.map((logo, i) => {
-              const col = i % 3;
-              const row = Math.floor(i / 3);
-              return (
-                <StaggerItem
-                  key={logo.name}
-                  variant="pop"
-                  className="relative flex min-h-[88px] items-center justify-center px-4 py-6 md:min-h-[100px] md:px-6 md:py-7"
-                >
-                  <Image
-                    src={logo.src}
-                    alt={logo.name}
-                    width={140}
-                    height={48}
-                    unoptimized={logo.name === "Leap Scholar"}
-                    loading="lazy"
-                    quality={75}
-                    className={`w-auto object-contain ${
-                      logo.name === "Leap Scholar"
-                        ? "h-7 max-w-[130px] md:h-8 md:max-w-[150px]"
-                        : "h-8 max-w-[120px] md:h-9 md:max-w-[140px]"
-                    }`}
-                  />
-                  {col < 2 ? (
-                    <span
-                      className="absolute top-[20%] right-0 bottom-[20%] w-px bg-[rgba(27,42,74,0.12)]"
-                      aria-hidden
-                    />
-                  ) : null}
-                  {row === 0 ? (
-                    <span
-                      className="absolute right-[12%] bottom-0 left-[12%] h-px bg-[rgba(27,42,74,0.1)]"
-                      aria-hidden
-                    />
-                  ) : null}
-                </StaggerItem>
-              );
-            })}
+          <Stagger className="grid grid-cols-2 sm:grid-cols-4" fast>
+            {row1.map((logo, i) => (
+              <PartnerLogo
+                key={logo.name}
+                logo={logo}
+                showDivider={i < row1.length - 1}
+                showMobileDivider={i % 2 === 0}
+              />
+            ))}
+          </Stagger>
+
+          <div className="mx-auto h-px w-[92%] bg-[rgba(27,42,74,0.1)]" aria-hidden />
+
+          <Stagger className="mx-auto grid max-w-[720px] grid-cols-3" fast>
+            {row2.map((logo, i) => (
+              <PartnerLogo
+                key={logo.name}
+                logo={logo}
+                showDivider={i < row2.length - 1}
+                showMobileDivider={i < row2.length - 1}
+                large={logo.name === "Leap Scholar"}
+              />
+            ))}
           </Stagger>
         </div>
       </div>

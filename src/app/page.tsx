@@ -10,20 +10,20 @@ import { GlassNav } from "@/components/sections/GlassNav";
 
 export default function Home() {
   return (
-    <main className="bg-[#FBF6EE]">
+    <main className="bg-white">
       <div className="pointer-events-none sticky top-0 z-50 flex justify-center px-3 pt-3 pb-2 md:px-4 md:pt-4 md:pb-3">
         <div className="pointer-events-auto">
           <GlassNav />
         </div>
       </div>
       <Hero />
+      <PostcardInvite />
       <BackedBy />
       <Channels />
       <Modules />
       <Events />
       <Audience />
       <Faq />
-      <PostcardInvite />
     </main>
   );
 }
