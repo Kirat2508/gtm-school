@@ -23,16 +23,18 @@ function PartnerLogo({
   showDivider,
   showMobileDivider,
   large,
+  className = "",
 }: {
   logo: (typeof partnersAndSupportedBy)[number];
   showDivider?: boolean;
   showMobileDivider?: boolean;
   large?: boolean;
+  className?: string;
 }) {
   return (
-    <StaggerItem variant="pop" className="relative">
+    <StaggerItem variant="pop" className={`relative ${className}`}>
       <motion.div
-        className="relative flex min-h-[96px] items-center justify-center px-3 py-5 md:min-h-[110px] md:px-4 md:py-6"
+        className="relative flex min-h-[88px] items-center justify-center px-3 py-4 md:min-h-[110px] md:px-4 md:py-6"
         whileHover={{ scale: 1.06, y: -2 }}
         transition={{ type: "spring", stiffness: 320, damping: 18 }}
       >
@@ -44,19 +46,19 @@ function PartnerLogo({
           unoptimized
           className={
             large
-              ? "h-14 w-auto max-w-[200px] object-contain object-center md:h-16 md:max-w-[220px]"
-              : "h-11 w-auto max-w-[150px] object-contain object-center md:h-12 md:max-w-[170px]"
+              ? "h-12 w-auto max-w-[min(100%,148px)] object-contain object-center md:h-16 md:max-w-[220px]"
+              : "h-10 w-auto max-w-[min(100%,132px)] object-contain object-center md:h-12 md:max-w-[170px]"
           }
         />
         {showDivider ? (
           <span
-            className="absolute top-[22%] right-0 bottom-[22%] hidden w-px bg-[rgba(27,42,74,0.12)] sm:block"
+            className="absolute top-[22%] right-0 bottom-[22%] hidden w-px bg-[rgba(27,42,74,0.12)] md:block"
             aria-hidden
           />
         ) : null}
         {showMobileDivider ? (
           <span
-            className="absolute top-[22%] right-0 bottom-[22%] w-px bg-[rgba(27,42,74,0.12)] sm:hidden"
+            className="absolute top-[22%] right-0 bottom-[22%] w-px bg-[rgba(27,42,74,0.12)] md:hidden"
             aria-hidden
           />
         ) : null}
@@ -104,7 +106,8 @@ export function BackedBy() {
         <div className="relative mt-8 px-2 md:mt-10 md:px-4">
           <CornerMarks />
 
-          <Stagger className="grid grid-cols-2 sm:grid-cols-4" fast>
+          {/* Desktop: 4 across. Mobile: 2×2 */}
+          <Stagger className="grid grid-cols-2 md:grid-cols-4" fast>
             {row1.map((logo, i) => (
               <PartnerLogo
                 key={logo.name}
@@ -117,16 +120,29 @@ export function BackedBy() {
 
           <div className="mx-auto h-px w-[92%] bg-[rgba(27,42,74,0.1)]" aria-hidden />
 
-          <Stagger className="mx-auto grid max-w-[720px] grid-cols-3" fast>
-            {row2.map((logo, i) => (
-              <PartnerLogo
-                key={logo.name}
-                logo={logo}
-                showDivider={i < row2.length - 1}
-                showMobileDivider={i < row2.length - 1}
-                large={logo.name === "Leap Scholar"}
-              />
-            ))}
+          {/*
+            Desktop: 3 across (unchanged).
+            Mobile: Leap | Bhive, then Quash centered alone —
+            3-col on a narrow screen was the overlap root cause.
+          */}
+          <Stagger className="mx-auto grid max-w-[720px] grid-cols-2 md:grid-cols-3" fast>
+            {row2.map((logo, i) => {
+              const isLast = i === row2.length - 1;
+              return (
+                <PartnerLogo
+                  key={logo.name}
+                  logo={logo}
+                  showDivider={i < row2.length - 1}
+                  showMobileDivider={i === 0}
+                  large={logo.name === "Leap Scholar"}
+                  className={
+                    isLast
+                      ? "col-span-2 justify-self-center w-full max-w-[50%] md:col-span-1 md:max-w-none"
+                      : ""
+                  }
+                />
+              );
+            })}
           </Stagger>
         </div>
       </div>
