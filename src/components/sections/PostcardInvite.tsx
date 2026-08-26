@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import {
   motion,
   useReducedMotion,
@@ -21,10 +21,22 @@ const FLAP_PATH = "M 0 0 H 200 V 92 L 100 128 L 0 92 Z";
 const PAPER_GRAIN =
   "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")";
 
+function useIsMobile() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia("(max-width: 767px)");
+      mq.addEventListener("change", onStoreChange);
+      return () => mq.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(max-width: 767px)").matches,
+    () => false,
+  );
+}
 
 export function PostcardInvite() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -48,10 +60,18 @@ export function PostcardInvite() {
     reduce ? [-120, -120, -120] : [30, -50, -160],
   );
 
+  // Mobile: letter must rise further — % translate scales with a smaller card,
+  // so the same -32% leaves the lower copy trapped under the pocket.
   const cardY = useTransform(
     scrollYProgress,
     [0.55, 0.72, 0.88, 1],
-    reduce ? ["-32%", "-32%", "-32%", "-32%"] : ["18%", "-12%", "-30%", "-32%"],
+    reduce
+      ? isMobile
+        ? ["-52%", "-52%", "-52%", "-52%"]
+        : ["-32%", "-32%", "-32%", "-32%"]
+      : isMobile
+        ? ["12%", "-18%", "-42%", "-52%"]
+        : ["18%", "-12%", "-30%", "-32%"],
   );
   const cardRotate = useTransform(
     scrollYProgress,
@@ -64,11 +84,11 @@ export function PostcardInvite() {
       ref={ref}
       id="postcard"
       className="relative bg-white"
-      style={{ height: "260vh" }}
+      style={{ height: isMobile ? "280vh" : "260vh" }}
     >
-      <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] flex-col items-center justify-center px-5 py-10 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10">
+      <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] flex-col items-center justify-center px-4 py-6 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10 md:py-10">
         <div
-          className="relative mx-auto aspect-square w-full max-w-[min(90vw,460px)] overflow-visible md:max-w-[500px] lg:max-w-[540px]"
+          className="relative mx-auto aspect-square w-full max-w-[min(92vw,460px)] overflow-visible md:max-w-[500px] lg:max-w-[540px]"
           style={{
             perspective: 1800,
             perspectiveOrigin: "50% 0%",
@@ -293,18 +313,18 @@ export function PostcardInvite() {
           </motion.div>
 
           <div
-            className="absolute inset-0 z-20 overflow-x-clip"
-            style={{ clipPath: "inset(-70% 0 0 0)" }}
+            className="absolute inset-0 z-20 overflow-visible md:overflow-x-clip"
+            style={{ clipPath: "inset(-85% 0 0 0)" }}
           >
             <motion.article
               style={{
                 y: cardY,
                 rotate: cardRotate,
               }}
-              className="absolute inset-x-[6%] top-[8%] bottom-[8%] origin-bottom"
+              className="absolute inset-x-[5%] top-[5%] origin-bottom md:inset-x-[6%] md:top-[8%] md:bottom-[8%]"
             >
               <div
-                className="flex h-full flex-col rounded-[1.5px] border px-5 pt-5 pb-6 md:px-6 md:pt-6"
+                className="flex flex-col rounded-[1.5px] border px-4 pt-4 pb-5 md:h-full md:px-6 md:pt-6 md:pb-6"
                 style={{
                   backgroundColor: "#FAF4EA",
                   backgroundImage: `${PAPER_GRAIN}, linear-gradient(180deg, rgba(255,255,255,0.45), rgba(255,255,255,0))`,
@@ -314,40 +334,40 @@ export function PostcardInvite() {
                     "0 -6px 20px rgba(27,42,74,0.07), 0 2px 8px rgba(27,42,74,0.04)",
                 }}
               >
-                <p className="font-hand text-[18px] leading-snug text-[#1B2A4A] md:text-[20px]">
+                <p className="font-hand text-[17px] leading-snug text-[#1B2A4A] md:text-[20px]">
                   Hey builder,
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:mt-1.5 md:text-[15px]">
                   You&apos;ve built the thing. Now let&apos;s figure out how to
                   get people to care.
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
                   Come learn GTM the way it actually happens — through real
                   conversations, sharp feedback, chai, and a few things that
                   might not work the first time.
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
                   Bring your product. We&apos;ll bring the room.
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
                   Save a seat. We&apos;ll save you a chair.
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
                   Expect candid talks from operators who&apos;ve been in the
                   trenches, live teardown of real GTM motions, and practical
                   frameworks you can steal (ethically). Ask your toughest
                   questions. Share what you&apos;re stuck on. Leave with
                   clarity, not just inspiration.
                 </p>
-                <p className="font-hand mt-1.5 text-[14px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
+                <p className="font-hand mt-1.5 text-[13px] leading-snug text-[#1B2A4A]/90 md:text-[15px]">
                   Whether you&apos;re pre-launch or post-PMF, this is a space to
                   learn, build, and grow — together.
                 </p>
-                <div className="mt-2.5 pb-8 md:mt-3 md:pb-10">
-                  <p className="font-hand text-[14px] text-[#1B2A4A] md:text-[15px]">
+                <div className="mt-2.5 pb-10 md:mt-3 md:pb-10">
+                  <p className="font-hand text-[13px] text-[#1B2A4A] md:text-[15px]">
                     With love,
                   </p>
-                  <p className="font-hand text-[18px] font-semibold text-[#E8C547] md:text-[20px]">
+                  <p className="font-hand text-[17px] font-semibold text-[#E8C547] md:text-[20px]">
                     Team AILC &amp; WIPM
                   </p>
                 </div>
@@ -356,7 +376,7 @@ export function PostcardInvite() {
           </div>
 
           <div
-            className="absolute inset-x-0 bottom-0 z-30 h-[40%] rounded-b-[2px]"
+            className="absolute inset-x-0 bottom-0 z-30 h-[32%] rounded-b-[2px] md:h-[40%]"
             style={{
               background: `linear-gradient(180deg, #F2E6D4 0%, ${PAPER_POCKET} 38%, #E0CFB4 100%)`,
               boxShadow:
@@ -395,17 +415,17 @@ export function PostcardInvite() {
               />
             </svg>
 
-            <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-4 md:pb-5">
-              <div className="flex items-center justify-center gap-4 md:gap-5">
+            <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-3 md:pb-5">
+              <div className="flex items-center justify-center gap-3 md:gap-5">
                 <Image
                   src="/images/ailc-logo.png"
                   alt="AI Learn Circle"
                   width={280}
                   height={180}
-                  className="h-[72px] w-auto max-w-[200px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
+                  className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
                 />
                 <span
-                  className="font-editorial select-none text-[16px] leading-none text-[#1B2A4A]/35 md:text-[18px]"
+                  className="font-editorial select-none text-[14px] leading-none text-[#1B2A4A]/35 md:text-[18px]"
                   aria-hidden
                 >
                   ×
@@ -415,7 +435,7 @@ export function PostcardInvite() {
                   alt="Women in Product Marketing"
                   width={280}
                   height={180}
-                  className="h-[72px] w-auto max-w-[200px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
+                  className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
                 />
               </div>
             </div>
