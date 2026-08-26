@@ -1,11 +1,23 @@
 "use client";
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const springSoft = { type: "spring" as const, stiffness: 120, damping: 18 };
 const springPop = { type: "spring" as const, stiffness: 260, damping: 18 };
+
+function useIsDesktop() {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia("(min-width: 768px)");
+      mq.addEventListener("change", onStoreChange);
+      return () => mq.removeEventListener("change", onStoreChange);
+    },
+    () => window.matchMedia("(min-width: 768px)").matches,
+    () => true,
+  );
+}
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
@@ -171,19 +183,16 @@ const revealPresets: Record<
     transition: Record<string, unknown>;
   }
 > = {
-  /** Classic settle from below with slight overshoot */
   rise: {
     initial: { opacity: 0, scale: 1.12, y: 56, filter: "blur(8px)" },
     animate: { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" },
     transition: { duration: 1.05, ease },
   },
-  /** Soft bloom — blur clears as it scales in */
   bloom: {
     initial: { opacity: 0, scale: 0.82, rotate: -2, filter: "blur(12px)" },
     animate: { opacity: 1, scale: 1, rotate: 0, filter: "blur(0px)" },
     transition: { duration: 1.1, ease },
   },
-  /** Clip wipe upward like a curtain lifting */
   wipe: {
     initial: {
       opacity: 0.35,
@@ -199,11 +208,41 @@ const revealPresets: Record<
     },
     transition: { duration: 1.15, ease },
   },
-  /** Slides in from the side with spring settle */
   drift: {
     initial: { opacity: 0, x: 64, scale: 1.05, rotate: 1.5 },
     animate: { opacity: 1, x: 0, scale: 1, rotate: 0 },
     transition: { ...springSoft, mass: 0.9 },
+  },
+};
+
+/** Mobile-safe presets — no CSS filter blur (expensive on phones) */
+const revealPresetsMobile: Record<
+  RevealVariant,
+  {
+    initial: Record<string, number | string>;
+    animate: Record<string, number | string>;
+    transition: Record<string, unknown>;
+  }
+> = {
+  rise: {
+    initial: { opacity: 0, scale: 1.06, y: 36 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    transition: { duration: 0.7, ease },
+  },
+  bloom: {
+    initial: { opacity: 0, scale: 0.92, y: 24 },
+    animate: { opacity: 1, scale: 1, y: 0 },
+    transition: { duration: 0.7, ease },
+  },
+  wipe: {
+    initial: { opacity: 0, y: 28, scale: 1.03 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    transition: { duration: 0.75, ease },
+  },
+  drift: {
+    initial: { opacity: 0, x: 32, scale: 1.02 },
+    animate: { opacity: 1, x: 0, scale: 1 },
+    transition: { duration: 0.7, ease },
   },
 };
 
@@ -216,7 +255,10 @@ export function RevealMedia({
   float = true,
 }: Props & { variant?: RevealVariant; float?: boolean }) {
   const reduce = useReducedMotion();
-  const preset = revealPresets[variant];
+  const desktop = useIsDesktop();
+  const preset = desktop
+    ? revealPresets[variant]
+    : revealPresetsMobile[variant];
 
   return (
     <motion.div
@@ -227,7 +269,7 @@ export function RevealMedia({
       transition={{ ...preset.transition, delay }}
     >
       <div
-        className={`relative h-full w-full${float && !reduce ? " media-float" : ""}`}
+        className={`relative h-full w-full${float && !reduce && desktop ? " media-float" : ""}`}
       >
         {children}
       </div>

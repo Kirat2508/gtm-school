@@ -1,12 +1,37 @@
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/sections/Hero";
-import { BackedBy } from "@/components/sections/BackedBy";
-import { Channels } from "@/components/sections/Channels";
-import { Modules } from "@/components/sections/Modules";
-import { Events } from "@/components/sections/Events";
-import { Audience } from "@/components/sections/Audience";
-import { Faq } from "@/components/sections/Faq";
-import { PostcardInvite } from "@/components/sections/PostcardInvite";
 import { GlassNav } from "@/components/sections/GlassNav";
+
+/** Below-fold sections — split JS so mobile boots Hero+Nav first */
+const PostcardInvite = dynamic(
+  () =>
+    import("@/components/sections/PostcardInvite").then((m) => m.PostcardInvite),
+  { ssr: true },
+);
+const BackedBy = dynamic(
+  () => import("@/components/sections/BackedBy").then((m) => m.BackedBy),
+  { ssr: true },
+);
+const Channels = dynamic(
+  () => import("@/components/sections/Channels").then((m) => m.Channels),
+  { ssr: true },
+);
+const Modules = dynamic(
+  () => import("@/components/sections/Modules").then((m) => m.Modules),
+  { ssr: true },
+);
+const Events = dynamic(
+  () => import("@/components/sections/Events").then((m) => m.Events),
+  { ssr: true },
+);
+const Audience = dynamic(
+  () => import("@/components/sections/Audience").then((m) => m.Audience),
+  { ssr: true },
+);
+const Faq = dynamic(
+  () => import("@/components/sections/Faq").then((m) => m.Faq),
+  { ssr: true },
+);
 
 export default function Home() {
   return (

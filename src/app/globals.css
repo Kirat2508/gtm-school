@@ -1,8 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 
 /* Monarcha Book is commercial — stack prefers local/licensed files, then Literata (OFL) as visual stand-in */
 @font-face {
@@ -42,7 +38,7 @@
   --accent-coral: #f47a72;
   --sky: linear-gradient(180deg, #e84393 0%, #f47a72 45%, #f5b041 100%);
   --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  --font-body: var(--font-inter-next), system-ui, sans-serif;
   --font-editorial: var(--font-fraunces), "Fraunces", Georgia, serif;
   --font-headline: var(--font-playfair), "Playfair Display", Georgia, serif;
   --font-hand: var(--font-caveat), "Caveat", cursive;
@@ -319,17 +315,22 @@ body {
   background: #ffffff;
   box-shadow: 0 4px 14px rgba(27, 42, 74, 0.07);
   border: 1px solid rgba(27, 42, 74, 0.06);
-  animation: sticker-bob 4.8s ease-in-out infinite;
 }
 
-.channel-logo-float:nth-child(2n) {
-  animation-duration: 5.4s;
-  animation-delay: 0.4s;
-}
+@media (min-width: 768px) {
+  .channel-logo-float {
+    animation: sticker-bob 4.8s ease-in-out infinite;
+  }
 
-.channel-logo-float:nth-child(3n) {
-  animation-duration: 6s;
-  animation-delay: 0.8s;
+  .channel-logo-float:nth-child(2n) {
+    animation-duration: 5.4s;
+    animation-delay: 0.4s;
+  }
+
+  .channel-logo-float:nth-child(3n) {
+    animation-duration: 6s;
+    animation-delay: 0.8s;
+  }
 }
 
 @keyframes sticker-bob {
@@ -726,7 +727,7 @@ body {
   filter: drop-shadow(0 12px 28px rgba(27, 42, 74, 0.16));
 }
 
-/* Gentle post-reveal bob on landmark images — presence without noise */
+/* Gentle post-reveal bob on landmark images — desktop only (mobile perf) */
 @keyframes media-float-bob {
   0%,
   100% {
@@ -738,8 +739,13 @@ body {
 }
 
 .media-float {
-  animation: media-float-bob 5.5s ease-in-out 1.2s infinite;
   will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .media-float {
+    animation: media-float-bob 5.5s ease-in-out 1.2s infinite;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

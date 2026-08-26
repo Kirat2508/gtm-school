@@ -51,7 +51,7 @@ function ModuleCard({ mod }: { mod: WorkflowModule }) {
           alt=""
           fill
           loading="lazy"
-          quality={70}
+          quality={60}
           className="origin-bottom-right scale-[1.08] object-contain object-right-bottom opacity-95"
           sizes="(max-width: 768px) 42vw, 22vw"
         />
@@ -69,13 +69,13 @@ export function Modules() {
         className="pointer-events-none absolute bottom-0 left-0 z-0 h-[70%] w-[min(90%,880px)] opacity-[0.68] sm:h-[76%] sm:w-[72%] lg:h-[86%] lg:w-[62%] xl:w-[60%]"
       >
         <Image
-          src="/images/blr-infra.png"
+          src="/images/blr-infra.webp"
           alt=""
           fill
           loading="lazy"
-          quality={68}
+          quality={60}
           className="origin-bottom-left scale-[1.18] object-contain object-left-bottom"
-          sizes="(max-width: 1024px) 90vw, 62vw"
+          sizes="(max-width: 1024px) min(90vw, 640px), 62vw"
         />
       </RevealMedia>
 

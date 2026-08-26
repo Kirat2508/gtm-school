@@ -23,7 +23,8 @@ export function GlassNav() {
           height={274}
           className="h-7 w-auto max-w-[148px] object-contain md:h-8 md:max-w-[168px]"
           priority
-          quality={90}
+          quality={65}
+          sizes="168px"
         />
       </a>
 

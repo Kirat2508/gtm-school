@@ -222,7 +222,7 @@ export function PostcardInvite() {
                   {/* Bangalore landmark — clipped to flap edge */}
                   <div className="absolute right-5 bottom-[30%] h-[68px] w-[80px] md:right-6 md:bottom-[32%] md:h-[76px] md:w-[90px]">
                     <Image
-                      src="/images/sunset-glasshouse-postcard.png"
+                      src="/images/sunset-glasshouse-postcard.webp"
                       alt=""
                       fill
                       loading="lazy"
@@ -418,11 +418,14 @@ export function PostcardInvite() {
             <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-3 md:pb-5">
               <div className="flex items-center justify-center gap-3 md:gap-5">
                 <Image
-                  src="/images/ailc-logo.png"
+                  src="/images/ailc-logo-sm.webp"
                   alt="AI Learn Circle"
                   width={280}
                   height={180}
                   className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
+                  loading="lazy"
+                  quality={60}
+                  sizes="(max-width: 768px) 140px, 230px"
                 />
                 <span
                   className="font-editorial select-none text-[14px] leading-none text-[#1B2A4A]/35 md:text-[18px]"
@@ -431,11 +434,14 @@ export function PostcardInvite() {
                   ×
                 </span>
                 <Image
-                  src="/images/wipm-logo.png"
+                  src="/images/wipm-logo-sm.webp"
                   alt="Women in Product Marketing"
                   width={280}
                   height={180}
                   className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
+                  loading="lazy"
+                  quality={60}
+                  sizes="(max-width: 768px) 140px, 230px"
                 />
               </div>
             </div>

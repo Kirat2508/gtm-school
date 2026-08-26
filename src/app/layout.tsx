@@ -14,11 +14,12 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-inter-next",
+  preload: true,
 });
 
 const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "900"],
+  weight: ["600", "700", "900"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-fraunces",
@@ -26,7 +27,7 @@ const fraunces = Fraunces({
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["500", "600"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-playfair",
@@ -34,20 +35,22 @@ const playfair = Playfair_Display({
 
 const caveat = Caveat({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "600"],
   display: "swap",
   variable: "--font-caveat",
+  preload: false,
 });
 
 const notoKannada = Noto_Serif_Kannada({
   subsets: ["kannada"],
-  weight: ["500", "600", "700"],
+  weight: ["600"],
   display: "swap",
   variable: "--font-noto-kannada",
+  preload: false,
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://gtmschool.bangalore"),
+  metadataBase: new URL("https://gtmschool.club"),
   title: site.seo.title,
   description: site.seo.description,
   openGraph: {

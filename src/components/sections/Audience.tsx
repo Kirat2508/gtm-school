@@ -101,13 +101,13 @@ export function Audience() {
             }}
           >
             <Image
-              src="/images/sunset-glasshouse.png"
+              src="/images/sunset-glasshouse.webp"
               alt="Lalbagh Glass House at sunset — illustrated Bangalore landmark"
               fill
               loading="lazy"
-              quality={75}
+              quality={60}
               className="origin-bottom-right scale-[1.14] object-contain object-right-bottom md:scale-[1.18]"
-              sizes="(max-width: 1024px) 100vw, 58vw"
+              sizes="(max-width: 1024px) min(100vw, 560px), 58vw"
             />
           </div>
         </RevealMedia>
