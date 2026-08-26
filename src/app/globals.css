@@ -1,30 +1,5 @@
 @import "tailwindcss";
 
-/* Monarcha Book is commercial — stack prefers local/licensed files, then Literata (OFL) as visual stand-in */
-@font-face {
-  font-family: "Monarcha Book";
-  src:
-    local("Monarcha Book"),
-    local("Monarcha-Book"),
-    url("/fonts/MonarchaBook.woff2") format("woff2"),
-    url("/fonts/Literata-Variable.ttf") format("truetype");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Monarcha Book";
-  src:
-    local("Monarcha Book Italic"),
-    local("Monarcha-BookItalic"),
-    url("/fonts/MonarchaBook-Italic.woff2") format("woff2"),
-    url("/fonts/Literata-Variable.ttf") format("truetype");
-  font-weight: 400 700;
-  font-style: italic;
-  font-display: swap;
-}
-
 :root {
   --bg: #ffffff;
   --bg-warm: #ffffff;
@@ -38,11 +13,10 @@
   --accent-coral: #f47a72;
   --sky: linear-gradient(180deg, #e84393 0%, #f47a72 45%, #f5b041 100%);
   --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
-  --font-body: var(--font-inter-next), system-ui, sans-serif;
+  --font-body: var(--font-inter-next), "Inter", system-ui, sans-serif;
   --font-editorial: var(--font-fraunces), "Fraunces", Georgia, serif;
   --font-headline: var(--font-playfair), "Playfair Display", Georgia, serif;
   --font-hand: var(--font-caveat), "Caveat", cursive;
-  --font-kannada: var(--font-noto-kannada), "Noto Serif Kannada", serif;
   --hero-cream: #ffffff;
   --hero-navy: #1b2a4a;
   --hero-lime: #c8f03c;
@@ -315,22 +289,17 @@ body {
   background: #ffffff;
   box-shadow: 0 4px 14px rgba(27, 42, 74, 0.07);
   border: 1px solid rgba(27, 42, 74, 0.06);
+  animation: sticker-bob 4.8s ease-in-out infinite;
 }
 
-@media (min-width: 768px) {
-  .channel-logo-float {
-    animation: sticker-bob 4.8s ease-in-out infinite;
-  }
+.channel-logo-float:nth-child(2n) {
+  animation-duration: 5.4s;
+  animation-delay: 0.4s;
+}
 
-  .channel-logo-float:nth-child(2n) {
-    animation-duration: 5.4s;
-    animation-delay: 0.4s;
-  }
-
-  .channel-logo-float:nth-child(3n) {
-    animation-duration: 6s;
-    animation-delay: 0.8s;
-  }
+.channel-logo-float:nth-child(3n) {
+  animation-duration: 6s;
+  animation-delay: 0.8s;
 }
 
 @keyframes sticker-bob {
@@ -363,10 +332,6 @@ body {
 
 .font-editorial {
   font-family: var(--font-fraunces), "Fraunces", Georgia, serif;
-}
-
-.font-kannada {
-  font-family: var(--font-noto-kannada), "Noto Serif Kannada", serif;
 }
 
 .container-page {
@@ -727,7 +692,7 @@ body {
   filter: drop-shadow(0 12px 28px rgba(27, 42, 74, 0.16));
 }
 
-/* Gentle post-reveal bob on landmark images — desktop only (mobile perf) */
+/* Gentle post-reveal bob on landmark images — presence without noise */
 @keyframes media-float-bob {
   0%,
   100% {
@@ -739,12 +704,15 @@ body {
 }
 
 .media-float {
+  animation: media-float-bob 5.5s ease-in-out 1.2s infinite;
   will-change: transform;
 }
 
-@media (min-width: 768px) {
-  .media-float {
-    animation: media-float-bob 5.5s ease-in-out 1.2s infinite;
+/* Mobile: continuous transforms burn GPU — keep desktop motion only */
+@media (max-width: 768px) {
+  .media-float,
+  .channel-logo-float {
+    animation: none !important;
   }
 }
 

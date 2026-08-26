@@ -7,15 +7,15 @@ const ease = [0.22, 1, 0.36, 1] as const;
 const springSoft = { type: "spring" as const, stiffness: 120, damping: 18 };
 const springPop = { type: "spring" as const, stiffness: 260, damping: 18 };
 
-function useIsDesktop() {
+function useIsMobile() {
   return useSyncExternalStore(
     (onStoreChange) => {
-      const mq = window.matchMedia("(min-width: 768px)");
+      const mq = window.matchMedia("(max-width: 768px)");
       mq.addEventListener("change", onStoreChange);
       return () => mq.removeEventListener("change", onStoreChange);
     },
-    () => window.matchMedia("(min-width: 768px)").matches,
-    () => true,
+    () => window.matchMedia("(max-width: 768px)").matches,
+    () => false,
   );
 }
 
@@ -175,7 +175,7 @@ export function StaggerItem({
 
 type RevealVariant = "rise" | "bloom" | "wipe" | "drift";
 
-const revealPresets: Record<
+const revealPresetsDesktop: Record<
   RevealVariant,
   {
     initial: Record<string, number | string>;
@@ -215,7 +215,7 @@ const revealPresets: Record<
   },
 };
 
-/** Mobile-safe presets — no CSS filter blur (expensive on phones) */
+/** Same motion without CSS blur — blur is costly on mobile GPUs */
 const revealPresetsMobile: Record<
   RevealVariant,
   {
@@ -255,10 +255,11 @@ export function RevealMedia({
   float = true,
 }: Props & { variant?: RevealVariant; float?: boolean }) {
   const reduce = useReducedMotion();
-  const desktop = useIsDesktop();
-  const preset = desktop
-    ? revealPresets[variant]
-    : revealPresetsMobile[variant];
+  const isMobile = useIsMobile();
+  const preset = (isMobile ? revealPresetsMobile : revealPresetsDesktop)[
+    variant
+  ];
+  const enableFloat = float && !reduce && !isMobile;
 
   return (
     <motion.div
@@ -269,7 +270,7 @@ export function RevealMedia({
       transition={{ ...preset.transition, delay }}
     >
       <div
-        className={`relative h-full w-full${float && !reduce && desktop ? " media-float" : ""}`}
+        className={`relative h-full w-full${enableFloat ? " media-float" : ""}`}
       >
         {children}
       </div>

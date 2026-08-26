@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Caveat,
-  Fraunces,
-  Inter,
-  Noto_Serif_Kannada,
-  Playfair_Display,
-} from "next/font/google";
+import { Caveat, Fraunces, Inter, Playfair_Display } from "next/font/google";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -19,7 +13,7 @@ const inter = Inter({
 
 const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["600", "700", "900"],
+  weight: ["500", "700", "900"],
   style: ["normal", "italic"],
   display: "swap",
   variable: "--font-fraunces",
@@ -38,15 +32,6 @@ const caveat = Caveat({
   weight: ["400", "600"],
   display: "swap",
   variable: "--font-caveat",
-  preload: false,
-});
-
-const notoKannada = Noto_Serif_Kannada({
-  subsets: ["kannada"],
-  weight: ["600"],
-  display: "swap",
-  variable: "--font-noto-kannada",
-  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -67,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`bg-white ${inter.variable} ${fraunces.variable} ${playfair.variable} ${caveat.variable} ${notoKannada.variable}`}
+      className={`bg-white ${inter.variable} ${fraunces.variable} ${playfair.variable} ${caveat.variable}`}
     >
       <body
         className="min-h-screen bg-white antialiased"

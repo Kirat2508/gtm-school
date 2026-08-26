@@ -4,17 +4,21 @@ import Image from "next/image";
 import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-export function Hero() {
-  const reduce = useReducedMotion();
-  const isDesktop = useSyncExternalStore(
+function useIsMobile() {
+  return useSyncExternalStore(
     (onStoreChange) => {
-      const mq = window.matchMedia("(min-width: 768px)");
+      const mq = window.matchMedia("(max-width: 768px)");
       mq.addEventListener("change", onStoreChange);
       return () => mq.removeEventListener("change", onStoreChange);
     },
-    () => window.matchMedia("(min-width: 768px)").matches,
-    () => true,
+    () => window.matchMedia("(max-width: 768px)").matches,
+    () => false,
   );
+}
+
+export function Hero() {
+  const reduce = useReducedMotion();
+  const isMobile = useIsMobile();
 
   return (
     <section className="relative overflow-hidden bg-white">
@@ -112,8 +116,9 @@ export function Hero() {
           initial={
             reduce
               ? false
-              : isDesktop
-                ? {
+              : isMobile
+                ? { opacity: 0, x: 40, y: 20, scale: 1.04 }
+                : {
                     opacity: 0,
                     x: 72,
                     y: 36,
@@ -121,11 +126,11 @@ export function Hero() {
                     filter: "blur(10px)",
                     rotate: 1.5,
                   }
-                : { opacity: 0, y: 24, scale: 1.04 }
           }
           animate={
-            isDesktop
-              ? {
+            isMobile
+              ? { opacity: 1, x: 0, y: 0, scale: 1 }
+              : {
                   opacity: 1,
                   x: 0,
                   y: 0,
@@ -133,24 +138,23 @@ export function Hero() {
                   filter: "blur(0px)",
                   rotate: 0,
                 }
-              : { opacity: 1, y: 0, scale: 1 }
           }
           transition={{
-            duration: isDesktop ? 1.25 : 0.7,
+            duration: isMobile ? 0.85 : 1.25,
             ease: [0.22, 1, 0.36, 1],
-            delay: isDesktop ? 0.2 : 0.1,
+            delay: 0.2,
           }}
         >
-          <div className={reduce || !isDesktop ? undefined : "media-float"}>
+          <div className={reduce ? undefined : "media-float"}>
             <Image
               src="/images/vidhana-soudha-hero.webp"
               alt="Vidhana Soudha, Bangalore"
               width={1672}
               height={941}
               priority
-              quality={isDesktop ? 78 : 58}
+              quality={78}
               className="h-auto w-full select-none object-contain object-right-bottom"
-              sizes="(max-width: 768px) min(100vw, 480px), (max-width: 1024px) 80vw, 64vw"
+              sizes="(max-width: 1024px) 90vw, 64vw"
             />
           </div>
         </motion.div>
