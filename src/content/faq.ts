@@ -15,7 +15,7 @@ export const faqCards: FaqCard[] = [
     number: "01",
     question: "Can I attend select sessions?",
     answer:
-      "Yes. Each session is standalone with its own deliverable. Come to one or all 20 — attending in order gives the most value.",
+      "Yes. Each session is standalone with its own deliverable. Come to one or all 15 — attending in order gives the most value.",
     accent: "#5B8DEF",
     tintSolid: "#E8F1FF",
     border: "rgba(91, 141, 239, 0.35)",

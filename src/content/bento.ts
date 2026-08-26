@@ -12,7 +12,7 @@ export const bentoItems: BentoItem[] = [
   {
     id: "s20",
     type: "stat",
-    title: "20",
+    title: "15",
     subtitle: "hands-on sessions",
     meta: "Sept → Oct 2026",
     color: "#E84393",

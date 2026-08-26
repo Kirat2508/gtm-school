@@ -28,7 +28,7 @@ export function RegistrationCta() {
               <em className="italic">your GTM.</em>
             </h2>
             <p className="mt-6 text-lg text-white/85">
-              20 sessions. 6 weeks. Bangalore. Sept to Oct 2026.
+              15 sessions. 6 weeks. Bangalore. Sept to Oct 2026.
               <br />
               Every session is free. Every seat is limited.
             </p>

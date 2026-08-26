@@ -2,7 +2,7 @@ import { CountUp } from "@/lib/CountUp";
 import { Reveal } from "@/lib/Reveal";
 
 const stats = [
-  { value: 20, label: "sessions" },
+  { value: 15, label: "sessions" },
   { value: 6, label: "weeks" },
   { value: 1, label: "complete GTM playbook" },
 ];

@@ -47,7 +47,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            20 hands-on sessions. Free. In person, in Bangalore.
+            15 hands-on sessions. Free. In person, in Bangalore.
           </motion.p>
 
           <motion.p

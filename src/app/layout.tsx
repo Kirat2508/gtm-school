@@ -39,13 +39,20 @@ export const metadata: Metadata = {
   title: site.seo.title,
   description: site.seo.description,
   applicationName: "The GTM School",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/images/browser-icon-rocket.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: "The GTM School — Free GTM series for builders in Bangalore",
     description:
-      "20 hands-on sessions. Free. In person. 28 Aug–3 Oct. Every session ends with something you ship — ICP, landing page, pipeline, AI agent. Presented by AI Learn Circle × WIPM.",
+      "15 hands-on sessions. Free. In person. 28 Aug–3 Oct. Every session ends with something you ship — ICP, landing page, pipeline, AI agent. Presented by AI Learn Circle × WIPM.",
     url: "https://www.gtmschool.club/",
     siteName: "The GTM School",
     locale: "en_IN",
@@ -64,7 +71,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The GTM School — Free GTM series for builders in Bangalore",
     description:
-      "20 hands-on sessions. Free. In person. 28 Aug–3 Oct. Ship real GTM deliverables. AI Learn Circle × WIPM.",
+      "15 hands-on sessions. Free. In person. 28 Aug–3 Oct. Ship real GTM deliverables. AI Learn Circle × WIPM.",
     images: ["/images/og-gtm-school.jpg"],
   },
 };

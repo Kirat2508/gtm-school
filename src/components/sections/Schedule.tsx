@@ -14,7 +14,7 @@ export function Schedule() {
             The full <em className="font-normal italic">schedule.</em>
           </h2>
           <p className="mt-4 max-w-2xl text-[17px] text-[var(--text-secondary)]">
-            20 sessions. Every Saturday and Sunday from September to October. Each
+            15 sessions. Every Saturday and Sunday from September to October. Each
             one standalone, all of them connected.
           </p>
         </Reveal>

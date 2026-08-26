@@ -22,8 +22,8 @@ export const site = {
   },
   seo: {
     title:
-      "The GTM School, Bangalore: 20 Hands-On GTM Sessions for Builders | Sept–Oct 2026",
+      "The GTM School, Bangalore: 15 Hands-On GTM Sessions for Builders | Sept–Oct 2026",
     description:
-      "The complete go-to-market playbook for early-stage builders and founders. 20 sessions. 6 weeks. Every session ends with a deliverable you ship. AI Learn Circle × WIPM presents. Free. In-person. Bangalore.",
+      "The complete go-to-market playbook for early-stage builders and founders. 15 sessions. 6 weeks. Every session ends with a deliverable you ship. AI Learn Circle × WIPM presents. Free. In-person. Bangalore.",
   },
 } as const;
