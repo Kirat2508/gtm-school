@@ -110,9 +110,12 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Absolute on desktop (unchanged); stacks under copy on mobile */}
+        {/* Absolute on desktop (unchanged); stacks under copy on mobile.
+            Never start with CSS blur on the first paint — isMobile is false
+            during SSR/hydration, which left blur(10px) stuck on phones. */}
         <motion.div
           className="pointer-events-none relative z-0 mx-auto mt-2 w-[min(100%,480px)] pb-6 sm:w-[80%] lg:absolute lg:right-0 lg:bottom-10 lg:mt-0 lg:w-[62%] lg:-translate-y-3 lg:pb-0 xl:bottom-12 xl:w-[64%] xl:-translate-y-4"
+          style={{ filter: "none" }}
           initial={
             reduce
               ? false
@@ -123,24 +126,19 @@ export function Hero() {
                     x: 72,
                     y: 36,
                     scale: 1.12,
-                    filter: "blur(10px)",
                     rotate: 1.5,
                   }
           }
-          animate={
-            isMobile
-              ? { opacity: 1, x: 0, y: 0, scale: 1 }
-              : {
-                  opacity: 1,
-                  x: 0,
-                  y: 0,
-                  scale: 1,
-                  filter: "blur(0px)",
-                  rotate: 0,
-                }
-          }
+          animate={{
+            opacity: 1,
+            x: 0,
+            y: 0,
+            scale: 1,
+            rotate: 0,
+            filter: "none",
+          }}
           transition={{
-            duration: isMobile ? 0.85 : 1.25,
+            duration: isMobile ? 0.85 : 1.15,
             ease: [0.22, 1, 0.36, 1],
             delay: 0.2,
           }}
@@ -152,9 +150,9 @@ export function Hero() {
               width={1672}
               height={941}
               priority
-              quality={78}
+              quality={85}
               className="h-auto w-full select-none object-contain object-right-bottom"
-              sizes="(max-width: 1024px) 90vw, 64vw"
+              sizes="(max-width: 1024px) 100vw, 64vw"
             />
           </div>
         </motion.div>
