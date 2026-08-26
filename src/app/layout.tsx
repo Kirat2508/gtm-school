@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "The GTM School — Free GTM series for builders in Bangalore",
+    title: "The GTM School — 15 free GTM sessions for builders in Bangalore",
     description:
       "15 hands-on sessions. Free. In person. 28 Aug–3 Oct. Every session ends with something you ship — ICP, landing page, pipeline, AI agent. Presented by AI Learn Circle × WIPM.",
     url: "https://www.gtmschool.club/",
@@ -59,20 +59,21 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/og-gtm-school.jpg",
+        // ?v=15 busts WhatsApp/Facebook cached previews that still showed "20"
+        url: "/images/og-gtm-school.jpg?v=15",
         width: 1200,
         height: 630,
-        alt: "The GTM School, Bangalore — free in-person GTM series for builders",
+        alt: "The GTM School, Bangalore — 15 free in-person GTM sessions for builders",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "The GTM School — Free GTM series for builders in Bangalore",
+    title: "The GTM School — 15 free GTM sessions for builders in Bangalore",
     description:
       "15 hands-on sessions. Free. In person. 28 Aug–3 Oct. Ship real GTM deliverables. AI Learn Circle × WIPM.",
-    images: ["/images/og-gtm-school.jpg"],
+    images: ["/images/og-gtm-school.jpg?v=15"],
   },
 };
 
