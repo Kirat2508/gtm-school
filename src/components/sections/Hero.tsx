@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { site } from "@/content/site";
 
 function useIsMobile() {
   return useSyncExternalStore(
@@ -101,7 +102,12 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.65 }}
           >
-            <a href="#events" className="hero-cta-grow">
+            <a
+              href={site.eventUrlPlaceholder}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hero-cta-grow"
+            >
               Save your seat
             </a>
             <p className="mt-3 text-[12px] text-[#1B2A4A]/70">

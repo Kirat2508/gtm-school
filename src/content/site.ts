@@ -7,14 +7,14 @@ export const site = {
   label: "Bangalore · Sept to Oct 2026",
   primaryCta: {
     label: "Register for free",
-    href: "#events",
+    href: "https://luma.com/user/gtmschool",
   },
   registerCta: {
     label: "Register now",
-    href: "#events",
+    href: "https://luma.com/user/gtmschool",
   },
   checkEventLabel: "Check event",
-  eventUrlPlaceholder: "https://lu.ma/gtm-school-bangalore",
+  eventUrlPlaceholder: "https://luma.com/user/gtmschool",
   social: {
     x: "https://x.com/",
     linkedin: "https://linkedin.com/",
