@@ -21,6 +21,14 @@ const FLAP_PATH = "M 0 0 H 200 V 92 L 100 128 L 0 92 Z";
 const PAPER_GRAIN =
   "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")";
 
+function useHasMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+}
+
 function useIsMobile() {
   return useSyncExternalStore(
     (onStoreChange) => {
@@ -36,8 +44,13 @@ function useIsMobile() {
 export function PostcardInvite() {
   const ref = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
-  const isMobile = useIsMobile();
+  const mounted = useHasMounted();
+  const isMobileMq = useIsMobile();
+  // Never paint desktop 3D on the first iPhone frame (Safari breaks rotateX + sticky).
+  const isMobile = mounted && isMobileMq;
+  const isDesktop3d = mounted && !isMobileMq;
 
+  // Desktop offset unchanged. Mobile uses the same range; open keyframes are delayed below.
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
@@ -61,59 +74,65 @@ export function PostcardInvite() {
     reduce ? [-120, -120, -120] : [30, -50, -160],
   );
 
-  // Mobile / iOS: skip rotateX (broken with sticky+perspective). Slide flap away in 2D.
+  // Mobile / iOS: closed until ~halfway through the sticky scroll, then 2D flap slide.
+  // (Early keyframes made iPhone look “already open” on first land.)
   const flapYMobile = useTransform(
     scrollYProgress,
-    [0.32, 0.48, 0.62],
+    [0.52, 0.64, 0.76],
     reduce ? ["-115%", "-115%", "-115%"] : ["0%", "-70%", "-120%"],
   );
   const flapOpacityMobile = useTransform(
     scrollYProgress,
-    [0.32, 0.5, 0.62],
-    reduce ? [0, 0, 0] : [1, 0.7, 0],
+    [0.52, 0.66, 0.76],
+    reduce ? [0, 0, 0] : [1, 0.65, 0],
   );
   const flapStackMobile = useTransform(
     scrollYProgress,
-    [0.32, 0.48, 0.58],
-    [40, 15, 5],
+    [0.52, 0.68, 0.78],
+    [40, 40, 5],
   );
 
-  // Mobile: letter must rise further — % translate scales with a smaller card,
-  // so the same -32% leaves the lower copy trapped under the pocket.
+  // Mobile: letter is bottom-anchored to the pocket lip, so y:0 = signature
+  // sits at the slit (no % overshoot from a tall card). Only tuck downward
+  // while closed. Desktop % travel unchanged.
   const cardY = useTransform(
     scrollYProgress,
-    isMobile ? [0.42, 0.6, 0.78, 1] : [0.55, 0.72, 0.88, 1],
+    isMobile ? [0.58, 0.72, 0.86, 1] : [0.55, 0.72, 0.88, 1],
     reduce
       ? isMobile
-        ? ["-52%", "-52%", "-52%", "-52%"]
+        ? ["0%", "0%", "0%", "0%"]
         : ["-32%", "-32%", "-32%", "-32%"]
       : isMobile
-        ? ["6%", "-22%", "-44%", "-52%"]
+        ? ["78%", "42%", "12%", "0%"]
         : ["18%", "-12%", "-30%", "-32%"],
+  );
+  const cardOpacityMobile = useTransform(
+    scrollYProgress,
+    [0.58, 0.66],
+    reduce ? [1, 1] : [0, 1],
   );
   const cardRotate = useTransform(
     scrollYProgress,
     [0.55, 0.88],
-    reduce ? [-1, -1] : isMobile ? [0, 0] : [0.6, -1],
+    reduce ? [-1, -1] : isDesktop3d ? [0.6, -1] : [0, 0],
   );
 
   return (
     <section
       ref={ref}
       id="postcard"
-      className="relative bg-white"
-      style={{ height: isMobile ? "280vh" : "260vh" }}
+      className="relative h-[260vh] bg-white max-md:h-[320vh]"
     >
       <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)] flex-col items-center justify-center px-4 py-6 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10 md:py-10">
         <div
           className="relative mx-auto aspect-square w-full max-w-[min(92vw,460px)] overflow-visible md:max-w-[500px] lg:max-w-[540px]"
           style={
-            isMobile
-              ? undefined
-              : {
+            isDesktop3d
+              ? {
                   perspective: 1800,
                   perspectiveOrigin: "50% 0%",
                 }
+              : undefined
           }
         >
           <div
@@ -164,33 +183,33 @@ export function PostcardInvite() {
           <motion.div
             className="pointer-events-none absolute inset-x-0 top-0 h-[78%]"
             style={
-              isMobile
-                ? {
+              isDesktop3d
+                ? { zIndex: flapStack }
+                : {
                     zIndex: flapStackMobile,
                     y: flapYMobile,
                     opacity: flapOpacityMobile,
                   }
-                : { zIndex: flapStack }
             }
           >
             <motion.div
               className="absolute inset-0 origin-top"
               style={
-                isMobile
-                  ? { transformOrigin: "50% 0%" }
-                  : {
+                isDesktop3d
+                  ? {
                       rotateX: flapRotate,
                       z: flapDepth,
                       transformOrigin: "50% 0%",
                       transformStyle: "preserve-3d",
                     }
+                  : { transformOrigin: "50% 0%" }
               }
             >
               <div
                 className="absolute inset-0"
                 style={{
-                  backfaceVisibility: isMobile ? undefined : "hidden",
-                  WebkitBackfaceVisibility: isMobile ? undefined : "hidden",
+                  backfaceVisibility: isDesktop3d ? "hidden" : undefined,
+                  WebkitBackfaceVisibility: isDesktop3d ? "hidden" : undefined,
                   filter: "drop-shadow(0 8px 18px rgba(27,42,74,0.1))",
                 }}
               >
@@ -311,7 +330,7 @@ export function PostcardInvite() {
                 </div>
               </div>
 
-              {!isMobile ? (
+              {isDesktop3d ? (
                 <div
                   className="absolute inset-0"
                   style={{
@@ -350,14 +369,15 @@ export function PostcardInvite() {
 
           <div
             className="absolute inset-0 z-20 overflow-visible md:overflow-x-clip"
-            style={{ clipPath: "inset(-85% 0 0 0)" }}
+            style={{ clipPath: isMobile ? undefined : "inset(-85% 0 0 0)" }}
           >
             <motion.article
               style={{
                 y: cardY,
                 rotate: cardRotate,
+                opacity: isMobile ? cardOpacityMobile : undefined,
               }}
-              className="absolute inset-x-[5%] top-[5%] origin-bottom md:inset-x-[6%] md:top-[8%] md:bottom-[8%]"
+              className="absolute inset-x-[5%] bottom-[33%] origin-bottom md:inset-x-[6%] md:top-[8%] md:bottom-[8%]"
             >
               <div
                 className="flex flex-col rounded-[1.5px] border px-4 pt-4 pb-5 md:h-full md:px-6 md:pt-6 md:pb-6"
@@ -399,7 +419,7 @@ export function PostcardInvite() {
                   Whether you&apos;re pre-launch or post-PMF, this is a space to
                   learn, build, and grow — together.
                 </p>
-                <div className="mt-2.5 pb-10 md:mt-3 md:pb-10">
+                <div className="mt-2.5 pb-2 md:mt-3 md:pb-10">
                   <p className="font-hand text-[13px] text-[#1B2A4A] md:text-[15px]">
                     With love,
                   </p>
