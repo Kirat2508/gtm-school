@@ -43,6 +43,7 @@ export function PostcardInvite() {
     offset: ["start start", "end end"],
   });
 
+  // Desktop: 3D hinge open (unchanged)
   const flapRotate = useTransform(
     scrollYProgress,
     [0.38, 0.5, 0.66, 0.78],
@@ -60,23 +61,40 @@ export function PostcardInvite() {
     reduce ? [-120, -120, -120] : [30, -50, -160],
   );
 
+  // Mobile / iOS: skip rotateX (broken with sticky+perspective). Slide flap away in 2D.
+  const flapYMobile = useTransform(
+    scrollYProgress,
+    [0.32, 0.48, 0.62],
+    reduce ? ["-115%", "-115%", "-115%"] : ["0%", "-70%", "-120%"],
+  );
+  const flapOpacityMobile = useTransform(
+    scrollYProgress,
+    [0.32, 0.5, 0.62],
+    reduce ? [0, 0, 0] : [1, 0.7, 0],
+  );
+  const flapStackMobile = useTransform(
+    scrollYProgress,
+    [0.32, 0.48, 0.58],
+    [40, 15, 5],
+  );
+
   // Mobile: letter must rise further — % translate scales with a smaller card,
   // so the same -32% leaves the lower copy trapped under the pocket.
   const cardY = useTransform(
     scrollYProgress,
-    [0.55, 0.72, 0.88, 1],
+    isMobile ? [0.42, 0.6, 0.78, 1] : [0.55, 0.72, 0.88, 1],
     reduce
       ? isMobile
         ? ["-52%", "-52%", "-52%", "-52%"]
         : ["-32%", "-32%", "-32%", "-32%"]
       : isMobile
-        ? ["12%", "-18%", "-42%", "-52%"]
+        ? ["6%", "-22%", "-44%", "-52%"]
         : ["18%", "-12%", "-30%", "-32%"],
   );
   const cardRotate = useTransform(
     scrollYProgress,
     [0.55, 0.88],
-    reduce ? [-1, -1] : [0.6, -1],
+    reduce ? [-1, -1] : isMobile ? [0, 0] : [0.6, -1],
   );
 
   return (
@@ -86,13 +104,17 @@ export function PostcardInvite() {
       className="relative bg-white"
       style={{ height: isMobile ? "280vh" : "260vh" }}
     >
-      <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] flex-col items-center justify-center px-4 py-6 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10 md:py-10">
+      <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)] flex-col items-center justify-center px-4 py-6 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10 md:py-10">
         <div
           className="relative mx-auto aspect-square w-full max-w-[min(92vw,460px)] overflow-visible md:max-w-[500px] lg:max-w-[540px]"
-          style={{
-            perspective: 1800,
-            perspectiveOrigin: "50% 0%",
-          }}
+          style={
+            isMobile
+              ? undefined
+              : {
+                  perspective: 1800,
+                  perspectiveOrigin: "50% 0%",
+                }
+          }
         >
           <div
             className="absolute inset-0 z-[1] rounded-[2px]"
@@ -141,22 +163,34 @@ export function PostcardInvite() {
 
           <motion.div
             className="pointer-events-none absolute inset-x-0 top-0 h-[78%]"
-            style={{ zIndex: flapStack }}
+            style={
+              isMobile
+                ? {
+                    zIndex: flapStackMobile,
+                    y: flapYMobile,
+                    opacity: flapOpacityMobile,
+                  }
+                : { zIndex: flapStack }
+            }
           >
             <motion.div
               className="absolute inset-0 origin-top"
-              style={{
-                rotateX: flapRotate,
-                z: flapDepth,
-                transformOrigin: "50% 0%",
-                transformStyle: "preserve-3d",
-              }}
+              style={
+                isMobile
+                  ? { transformOrigin: "50% 0%" }
+                  : {
+                      rotateX: flapRotate,
+                      z: flapDepth,
+                      transformOrigin: "50% 0%",
+                      transformStyle: "preserve-3d",
+                    }
+              }
             >
               <div
                 className="absolute inset-0"
                 style={{
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
+                  backfaceVisibility: isMobile ? undefined : "hidden",
+                  WebkitBackfaceVisibility: isMobile ? undefined : "hidden",
                   filter: "drop-shadow(0 8px 18px rgba(27,42,74,0.1))",
                 }}
               >
@@ -222,7 +256,7 @@ export function PostcardInvite() {
                   {/* Bangalore landmark — clipped to flap edge */}
                   <div className="absolute right-5 bottom-[30%] h-[68px] w-[80px] md:right-6 md:bottom-[32%] md:h-[76px] md:w-[90px]">
                     <Image
-                      src="/images/sunset-glasshouse-postcard.webp"
+                      src="/images/sunset-glasshouse-postcard.png"
                       alt=""
                       fill
                       loading="lazy"
@@ -277,38 +311,40 @@ export function PostcardInvite() {
                 </div>
               </div>
 
-              <div
-                className="absolute inset-0"
-                style={{
-                  transform: "rotateX(180deg)",
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-                aria-hidden
-              >
-                <svg
-                  viewBox="0 0 200 130"
-                  className="h-full w-full"
-                  preserveAspectRatio="none"
+              {!isMobile ? (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    transform: "rotateX(180deg)",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                  }}
+                  aria-hidden
                 >
-                  <defs>
-                    <linearGradient id="flapBack" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#E9D9C2" />
-                      <stop offset="100%" stopColor={PAPER_BACK} />
-                    </linearGradient>
-                  </defs>
-                  <path d={FLAP_PATH} fill="url(#flapBack)" />
-                  <path
-                    d={FLAP_PATH}
-                    fill="none"
-                    stroke={INK}
-                    strokeWidth="0.85"
-                    strokeLinejoin="round"
-                    opacity="0.24"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-              </div>
+                  <svg
+                    viewBox="0 0 200 130"
+                    className="h-full w-full"
+                    preserveAspectRatio="none"
+                  >
+                    <defs>
+                      <linearGradient id="flapBack" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#E9D9C2" />
+                        <stop offset="100%" stopColor={PAPER_BACK} />
+                      </linearGradient>
+                    </defs>
+                    <path d={FLAP_PATH} fill="url(#flapBack)" />
+                    <path
+                      d={FLAP_PATH}
+                      fill="none"
+                      stroke={INK}
+                      strokeWidth="0.85"
+                      strokeLinejoin="round"
+                      opacity="0.24"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
+                </div>
+              ) : null}
             </motion.div>
           </motion.div>
 
@@ -418,14 +454,11 @@ export function PostcardInvite() {
             <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-3 md:pb-5">
               <div className="flex items-center justify-center gap-3 md:gap-5">
                 <Image
-                  src="/images/ailc-logo-sm.webp"
+                  src="/images/ailc-logo.png"
                   alt="AI Learn Circle"
                   width={280}
                   height={180}
                   className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
-                  loading="lazy"
-                  quality={60}
-                  sizes="(max-width: 768px) 140px, 230px"
                 />
                 <span
                   className="font-editorial select-none text-[14px] leading-none text-[#1B2A4A]/35 md:text-[18px]"
@@ -434,14 +467,11 @@ export function PostcardInvite() {
                   ×
                 </span>
                 <Image
-                  src="/images/wipm-logo-sm.webp"
+                  src="/images/wipm-logo.png"
                   alt="Women in Product Marketing"
                   width={280}
                   height={180}
                   className="h-[52px] w-auto max-w-[140px] object-contain object-center opacity-[0.95] md:h-[84px] md:max-w-[230px]"
-                  loading="lazy"
-                  quality={60}
-                  sizes="(max-width: 768px) 140px, 230px"
                 />
               </div>
             </div>
