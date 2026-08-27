@@ -1,7 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useSyncExternalStore } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import {
   motion,
   useReducedMotion,
@@ -14,6 +19,8 @@ const PAPER = "#F0E6D4";
 const PAPER_POCKET = "#E8DAC4";
 const PAPER_BACK = "#E2D2B8";
 const INK = "#1B2A4A";
+const MOBILE_POCKET = 0.32;
+const MOBILE_LETTER_TOP = 0.05;
 
 /** Pointed flap — full-width hinge, wide obtuse point */
 const FLAP_PATH = "M 0 0 H 200 V 92 L 100 128 L 0 92 Z";
@@ -43,6 +50,8 @@ function useIsMobile() {
 
 export function PostcardInvite() {
   const ref = useRef<HTMLElement>(null);
+  const squareRef = useRef<HTMLDivElement>(null);
+  const letterRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const mounted = useHasMounted();
   const isMobileMq = useIsMobile();
@@ -50,7 +59,34 @@ export function PostcardInvite() {
   const isMobile = mounted && isMobileMq;
   const isDesktop3d = mounted && !isMobileMq;
 
-  // Desktop offset unchanged. Mobile uses the same range; open keyframes are delayed below.
+  // Measured so signature lands on the pocket lip (px, not % of tall letter).
+  const [mobileEndY, setMobileEndY] = useState(-160);
+
+  useLayoutEffect(() => {
+    if (!isMobile) return;
+
+    const measure = () => {
+      const square = squareRef.current;
+      const letter = letterRef.current;
+      if (!square || !letter) return;
+      const squareH = square.offsetHeight;
+      const letterH = letter.offsetHeight;
+      if (squareH < 8 || letterH < 8) return;
+      // Signature block sits near the bottom of the letter card.
+      const sigFromTop = letterH - 20;
+      const pocketTop = squareH * (1 - MOBILE_POCKET);
+      const letterTop = squareH * MOBILE_LETTER_TOP;
+      // letterTop + sigFromTop + y ≈ pocketTop − 6px
+      setMobileEndY(pocketTop - 6 - letterTop - sigFromTop);
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    if (squareRef.current) ro.observe(squareRef.current);
+    if (letterRef.current) ro.observe(letterRef.current);
+    return () => ro.disconnect();
+  }, [isMobile]);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
@@ -74,41 +110,50 @@ export function PostcardInvite() {
     reduce ? [-120, -120, -120] : [30, -50, -160],
   );
 
-  // Mobile / iOS: closed until ~halfway through the sticky scroll, then 2D flap slide.
-  // (Early keyframes made iPhone look “already open” on first land.)
+  // Mobile / iOS: closed until mid-scroll, then 2D flap slide (no rotateX).
   const flapYMobile = useTransform(
     scrollYProgress,
-    [0.52, 0.64, 0.76],
+    [0.5, 0.62, 0.74],
     reduce ? ["-115%", "-115%", "-115%"] : ["0%", "-70%", "-120%"],
   );
   const flapOpacityMobile = useTransform(
     scrollYProgress,
-    [0.52, 0.66, 0.76],
+    [0.5, 0.64, 0.74],
     reduce ? [0, 0, 0] : [1, 0.65, 0],
   );
   const flapStackMobile = useTransform(
     scrollYProgress,
-    [0.52, 0.68, 0.78],
+    [0.5, 0.66, 0.76],
     [40, 40, 5],
   );
 
-  // Mobile: letter is bottom-anchored to the pocket lip, so y:0 = signature
-  // sits at the slit (no % overshoot from a tall card). Only tuck downward
-  // while closed. Desktop % travel unchanged.
-  const cardY = useTransform(
+  // Desktop travel unchanged (percentages).
+  const desktopCardY = useTransform(
     scrollYProgress,
-    isMobile ? [0.58, 0.72, 0.86, 1] : [0.55, 0.72, 0.88, 1],
+    [0.55, 0.72, 0.88, 1],
     reduce
-      ? isMobile
-        ? ["0%", "0%", "0%", "0%"]
-        : ["-32%", "-32%", "-32%", "-32%"]
-      : isMobile
-        ? ["78%", "42%", "12%", "0%"]
-        : ["18%", "-12%", "-30%", "-32%"],
+      ? ["-32%", "-32%", "-32%", "-32%"]
+      : ["18%", "-12%", "-30%", "-32%"],
   );
+
+  // Mobile travel in px — % of a content-tall letter was the overshoot root cause.
+  const mobileStartY = 36;
+  const mobileCardY = useTransform(
+    scrollYProgress,
+    [0.56, 0.7, 0.84, 1],
+    reduce
+      ? [mobileEndY, mobileEndY, mobileEndY, mobileEndY]
+      : [
+          mobileStartY,
+          mobileStartY * 0.25,
+          mobileEndY * 0.55,
+          mobileEndY,
+        ],
+  );
+
   const cardOpacityMobile = useTransform(
     scrollYProgress,
-    [0.58, 0.66],
+    [0.56, 0.64],
     reduce ? [1, 1] : [0, 1],
   );
   const cardRotate = useTransform(
@@ -124,8 +169,17 @@ export function PostcardInvite() {
       className="relative h-[260vh] bg-white max-md:h-[320vh]"
     >
       <div className="sticky top-[72px] flex min-h-[calc(100vh-72px)] min-h-[calc(100dvh-72px)] flex-col items-center justify-center px-4 py-6 md:top-[80px] md:min-h-[calc(100vh-80px)] md:px-10 md:py-10">
+        {/*
+          Mobile root cause fixes:
+          1) clip-path keeps the letter from hanging out under the pocket
+             (allows rise above the square only).
+          2) letter travel is measured in px to the pocket lip — never % of
+             the tall letter (that yanked the whole card out).
+          Desktop: overflow/clip unchanged; 3D path only when isDesktop3d.
+        */}
         <div
-          className="relative mx-auto aspect-square w-full max-w-[min(92vw,460px)] overflow-visible md:max-w-[500px] lg:max-w-[540px]"
+          ref={squareRef}
+          className="relative mx-auto aspect-square w-full max-w-[min(92vw,460px)] overflow-visible max-md:[clip-path:inset(-100vmax_0_0_0)] md:max-w-[500px] lg:max-w-[540px]"
           style={
             isDesktop3d
               ? {
@@ -272,7 +326,6 @@ export function PostcardInvite() {
                     className="absolute bottom-[28%] left-3.5 rotate-[-18deg] text-[#6B5344]/30 md:bottom-[30%] md:left-5 md:size-[60px]"
                   />
 
-                  {/* Bangalore landmark — clipped to flap edge */}
                   <div className="absolute right-5 bottom-[30%] h-[68px] w-[80px] md:right-6 md:bottom-[32%] md:h-[76px] md:w-[90px]">
                     <Image
                       src="/images/sunset-glasshouse-postcard.png"
@@ -369,15 +422,18 @@ export function PostcardInvite() {
 
           <div
             className="absolute inset-0 z-20 overflow-visible md:overflow-x-clip"
-            style={{ clipPath: isMobile ? undefined : "inset(-85% 0 0 0)" }}
+            style={{
+              clipPath: isDesktop3d ? "inset(-85% 0 0 0)" : undefined,
+            }}
           >
             <motion.article
+              ref={letterRef}
               style={{
-                y: cardY,
+                y: isMobile ? mobileCardY : desktopCardY,
                 rotate: cardRotate,
                 opacity: isMobile ? cardOpacityMobile : undefined,
               }}
-              className="absolute inset-x-[5%] bottom-[33%] origin-bottom md:inset-x-[6%] md:top-[8%] md:bottom-[8%]"
+              className="absolute inset-x-[5%] top-[5%] origin-bottom md:inset-x-[6%] md:top-[8%] md:bottom-[8%]"
             >
               <div
                 className="flex flex-col rounded-[1.5px] border px-4 pt-4 pb-5 md:h-full md:px-6 md:pt-6 md:pb-6"
