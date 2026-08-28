@@ -59,8 +59,8 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        // ?v=15 busts WhatsApp/Facebook cached previews that still showed "20"
-        url: "/images/og-gtm-school.jpg?v=15",
+        // ?v=16 busts cached previews that showed the old black-gradient OG image
+        url: "/images/og-gtm-school.jpg?v=16",
         width: 1200,
         height: 630,
         alt: "The GTM School, Bangalore — 15 free in-person GTM sessions for builders",
@@ -73,7 +73,7 @@ export const metadata: Metadata = {
     title: "The GTM School — 15 free GTM sessions for builders in Bangalore",
     description:
       "15 hands-on sessions. Free. In person. 28 Aug–3 Oct. Ship real GTM deliverables. AI Learn Circle × WIPM.",
-    images: ["/images/og-gtm-school.jpg?v=15"],
+    images: ["/images/og-gtm-school.jpg?v=16"],
   },
 };
 
