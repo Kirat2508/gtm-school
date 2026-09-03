@@ -91,13 +91,13 @@ export function Channels() {
         className="pointer-events-none absolute bottom-0 left-0 z-[1] h-[78%] w-[min(48%,460px)] sm:w-[38%] lg:h-[95%] lg:w-[32%] xl:w-[34%]"
       >
         <Image
-          src="/images/cherry-blossom.webp"
+          src="/images/cherry-blossom-new.png"
           alt=""
           fill
           loading="lazy"
-          quality={60}
+          quality={70}
           className="origin-bottom-left scale-[1.28] object-contain object-left-bottom"
-          sizes="(max-width: 1024px) min(48vw, 280px), 34vw"
+          sizes="(max-width: 1024px) 48vw, 34vw"
         />
       </RevealMedia>
 

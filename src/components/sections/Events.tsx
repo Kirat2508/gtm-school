@@ -164,13 +164,13 @@ export function Events() {
             className="absolute inset-0 overflow-hidden"
           >
             <Image
-              src="/images/corner-house.webp"
+              src="/images/corner-house.png"
               alt=""
               fill
               className="origin-bottom-right scale-[1.12] object-contain object-right-bottom"
               sizes="680px"
               loading="lazy"
-              quality={60}
+              quality={75}
             />
           </RevealMedia>
         </div>
@@ -231,13 +231,13 @@ export function Events() {
             className="absolute inset-0 overflow-hidden"
           >
             <Image
-              src="/images/corner-house.webp"
+              src="/images/corner-house.png"
               alt=""
               fill
               loading="lazy"
-              quality={60}
+              quality={75}
               className="origin-bottom scale-[1.1] object-contain object-bottom"
-              sizes="(max-width: 1024px) min(90vw, 480px), 0px"
+              sizes="90vw"
             />
           </RevealMedia>
         </div>
